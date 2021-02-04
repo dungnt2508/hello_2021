@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Login{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <div class="card-wrapper">
+	    <div class="card">
+		    <h1 class="center">Login</h1>
+		    <form name="login_form">
+
+			    <label for="email">Name</label>
+			    <input type="name" name="name" class="field" required>
+
+			    <label for="password">Password</label>
+			    <input type="password" name="password" class="field" required>
+
+			    <p class="error error--hidden">
+
+			    </p>
+
+			    <input type="submit" class="btn" value="Login">
+
+		    </form>
+
+	    </div>
+
+    </div>
+{% endblock %}
