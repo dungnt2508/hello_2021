@@ -1,4 +1,4 @@
-#hello_2021
+#hello_2021 : app quan ly
   + app_demo
     + api
       - __init__.py
@@ -6,19 +6,18 @@
       - routes.py
     + build
       + static
-        + css
-          - normalize.css
-          - styles.css
+        + config
+        + dist
         + js
-          - jquery.js
-          - scripts.js
+        + npm
+        + plugins
+        + scss
       + templates
         + auth
           - login.html
           - register.html
-        + predict
-          - index.html
-        - base.html
+        + page
+          - dashboard.html
     - __init__.py
     - db.py
   + instance
@@ -41,3 +40,19 @@ part 1 :
     - build auth view :
             register
             login
+            
+            
+--------------------------------------------------------------------------------------------------
+part qlcamdo : 
+    - build skeleton for app quan ly : done
+    - config app : done
+    - connect db : done
+    - build auth system :
+            register : done
+            login : done
+            
+    - build auth view :
+            register : done
+            login : done
+     - build page view : 
+            dashboard : doing
