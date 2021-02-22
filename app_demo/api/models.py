@@ -44,10 +44,10 @@ class User:
 
     def login(self):
         if request.method == 'POST':
-            name = request.form['name']
+            email = request.form['email']
             password = request.form['password']
             error = None
-            user = db.users.find_one({'name': name})
+            user = db.users.find_one({'email': email})
 
             if user is None:
                 error = 'Incorrect username.'
@@ -58,7 +58,7 @@ class User:
 
             if error is None:
                 session.clear()
-                session['name'] = user['name']
+                session['email'] = user['email']
                 session['id'] = str(user['_id'])
                 # print(session)
 
@@ -71,3 +71,6 @@ class User:
     def logout(self):
         session.clear()
         return redirect("/")
+
+    def dashboard(self):
+        return render_template('page/dashboard.html')

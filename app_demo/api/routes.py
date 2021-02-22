@@ -2,6 +2,7 @@ from flask import Blueprint, render_template
 from .models import User
 
 bp = Blueprint('auth',__name__, url_prefix='/auth')
+bp_page = Blueprint('page',__name__, url_prefix='/page')
 
 
 @bp.before_app_request
@@ -22,3 +23,8 @@ def login():
 @bp.route('/logout', methods=['GET'])
 def logout():
     return User().logout()
+
+
+@bp_page.route('/dashboard', methods=['GET'])
+def dashboard():
+    return User().dashboard()

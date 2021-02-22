@@ -11,7 +11,7 @@ $("form[name=register_form]").submit(function(e){
         dataType: "json",
         success: function(resp){
             console.log(resp)
-            window.location.href = "/";
+            window.location.href = "/auth/login";
         },
         error: function(resp){
             console.log(resp)
@@ -35,7 +35,7 @@ $("form[name=login_form]").submit(function(e){
         dataType: "json",
         success: function(resp){
             console.log(resp)
-            window.location.href = "/";
+            window.location.href = "/page/dashboard";
         },
         error: function(resp){
             console.log(resp)

@@ -35,10 +35,10 @@ def create_app(test_config=None):
 
     @app.route('/')
     def index():
-        return render_template('predict/index.html')
+        return render_template('auth/login.html')
 
     from .api import routes
     app.register_blueprint(routes.bp)
-
+    app.register_blueprint(routes.bp_page)
 
     return app
