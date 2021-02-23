@@ -16,7 +16,7 @@ class User:
             g.user = None
         else:
             g.user = db.users.find_one({"_id": user_id})
-        # print(g.auth)
+
 
     def register(self):
         if request.method == 'POST':

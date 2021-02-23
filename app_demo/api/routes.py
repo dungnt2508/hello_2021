@@ -6,6 +6,7 @@ bp_page = Blueprint('page',__name__, url_prefix='/page')
 
 
 @bp.before_app_request
+@bp_page.before_app_request
 def load_logged_in_user():
     User().load_logged_in_user()
 
