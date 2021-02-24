@@ -29,3 +29,13 @@ def logout():
 @bp_page.route('/dashboard', methods=['GET'])
 def dashboard():
     return User().dashboard()
+
+
+@bp_page.route('/qlnhanvien', methods=['GET'])
+def qlnhanvien():
+    return User().qlnhanvien()
+
+
+@bp_page.route('/qlkhachhang', methods=['GET'])
+def qlkhachhang():
+    return User().qlkhachhang()

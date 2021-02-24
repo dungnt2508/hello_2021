@@ -17,7 +17,6 @@ class User:
         else:
             g.user = db.users.find_one({"_id": user_id})
 
-
     def register(self):
         if request.method == 'POST':
             # Create the auth object
@@ -74,3 +73,13 @@ class User:
 
     def dashboard(self):
         return render_template('page/dashboard.html')
+
+    def qlnhanvien(self):
+        users = list(db.users.find({},{'_id': 0, 'password': 0}))
+        print(users)
+        return render_template('page/qlnhanvien.html', users=users)
+
+    def qlkhachhang(self):
+        customers = list(db.users.find({},{'_id': 0, 'password': 0}))
+        print(customers)
+        return render_template('page/qlkhachhang.html', customers=customers)
