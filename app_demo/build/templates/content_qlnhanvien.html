@@ -31,8 +31,8 @@
                 <div class="card-body pt-0">
                   <div class="row">
                     <div class="col-7">
-                      <h2 class="lead"><b>{{ user['name'] }}</b></h2>
-                      <p class="text-muted text-sm"><b>Fullname :</b> Nguyễn Thị Admin </p>
+                      <h2 class="lead"><b>{{ user['user_name'] }}</b></h2>
+                      <p class="text-muted text-sm"><b>Fullname :</b> {{ user['name']}} </p>
                       <ul class="ml-4 mb-0 fa-ul text-muted">
                         <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Email: {{ user['email']}}</li>
                         <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: {{ user['phone']}}</li>
@@ -48,7 +48,7 @@
                     <a href="#" class="btn btn-sm bg-teal">
                       <i class="fas fa-comments"></i>
                     </a>
-                    <a href="#" class="btn btn-sm btn-primary">
+                    <a href="{{ url_for('user.filter_one', email=user['email']) }}" class="btn btn-sm btn-primary">
                       <i class="fas fa-user"></i> View Profile
                     </a>
                   </div>

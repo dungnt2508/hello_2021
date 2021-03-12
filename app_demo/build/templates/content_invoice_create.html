@@ -1,0 +1,264 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Tạo hợp đồng</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+              <li class="breadcrumb-item active">Tạo hợp đồng</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+
+          <!-- /.col -->
+          <div class="col-md-9">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#pawn" data-toggle="tab">Cầm cố</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Tất toán</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Thanh lý</a></li>
+                </ul>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="active tab-pane" id="pawn">
+                    <form class="form-horizontal" name="invoice_pawn">
+	                    <div class="form-group row">
+                        <label for="invoice_id" class="col-sm-2 col-form-label">Mã HĐ</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" name="invoice_id" id="invoice_id" value="{% if g.user %} VG10010{{(g.total_invoice + 1)}} {% endif %}" readonly="true">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="name" class="col-sm-2 col-form-label">Tên KH *</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="name" name="name" placeholder="Họ và tên">
+                        </div>
+                      </div>
+	                     <div class="form-group row">
+                        <label for="cmnd" class="col-sm-2 col-form-label">Số CMND/Hộ chiếu</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="cmnd" name="cmnd" placeholder="Số CMND / Hộ chiếu">
+                        </div>
+                      </div>
+	                     <div class="form-group row">
+                        <label for="phone" class="col-sm-2 col-form-label">SĐT</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại">
+                        </div>
+                      </div>
+	                    <div class="form-group row">
+                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                          <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="address" class="col-sm-2 col-form-label">Địa chỉ</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="address" name="address" placeholder="Địa chỉ">
+                        </div>
+                      </div>
+	                    <div class="form-group row">
+		                  <label class="col-sm-2 col-form-label">Loại tài sản</label>
+		                    <div class="col-sm-10">
+		                  <select class="form-control select2bs4" id="item_kind" name="item_kind" style="width: 100%;">
+		                    <option selected="selected"></option>
+			                  {%  for s in g.settings %}
+			                  <option value='{{s["kind_item"]}}'>{{ s['item_name']}}</option>
+<!--			                  <option value={{s['rate']+s['service_charge']+s['storage_charge']}}>{{ s['item_name']}}</option>-->
+			                  {% endfor %}
+		                  </select>
+
+		                    </div>
+		                     <input type="hidden" id="kind_item" name="kind_item" value="">
+		                </div>
+	                    <div class="form-group row">
+                        <label for="item_name" class="col-sm-2 col-form-label">Tên tài sản</label>
+                        <div class="col-sm-10">
+                          <input type="text" class="form-control" id="item_name" name="item_name" placeholder="Tên tài sản">
+                        </div>
+                      </div>
+	                    <div class="form-group row">
+                        <label for="price" class="col-sm-2 col-form-label">Số tiền vay</label>
+                        <div class="col-sm-10">
+                          <input type="number" class="form-control" id="price" name="price" placeholder="Số tiền vay">
+                        </div>
+                      </div>
+	                    <div class="form-group row">
+                        <label for="from_date" class="col-sm-2 col-form-label">Ngày vay</label>
+                        <div class="col-sm-10">
+                          <input type="date"  class="form-control" id="from_date" name="from_date" placeholder="Ngày vay">
+                        </div>
+                      </div>
+	                    <div class="form-group row">
+                        <label for="to_date" class="col-sm-2 col-form-label">Đến ngày</label>
+                        <div class="col-sm-10">
+                          <input type="date" class="form-control" id="to_date" name="to_date" placeholder="Đến ngày">
+                        </div>
+                      </div>
+	                    <div class="form-group row">
+                        <label for="rate" class="col-sm-2 col-form-label">%Lãi/tuần</label>
+                        <div class="col-sm-10">
+	                        <input type="text" class="form-control" name="rate" id="rate" placeholder="" readonly="true">
+                        </div>
+                      </div>
+	                    <div class="form-group row">
+                        <label for="week" class="col-sm-2 col-form-label">Số tuần vay</label>
+                        <div class="col-sm-10">
+	                        <input type="text" class="form-control" name="week" id="week" placeholder="" readonly="true">
+                        </div>
+                      </div>
+	                    <div class="form-group row">
+                        <label for="price_rate" class="col-sm-2 col-form-label">Lãi phí dự kiến</label>
+                        <div class="col-sm-10">
+	                        <input type="text" class="form-control" name="price_rate" id="price_rate" placeholder="" readonly="true">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="note" class="col-sm-2 col-form-label">Ghi chú</label>
+                        <div class="col-sm-10">
+                          <textarea class="form-control" id="note" name="note" placeholder="Ghi chú"></textarea>
+                        </div>
+                      </div>
+	                    <div>
+					        <p class="error error--hidden">
+
+						    </p>
+				        </div>
+
+                      <div class="form-group row">
+                        <div class="offset-sm-2 col-sm-10">
+                          <button type="submit" class="btn btn-danger">Submit</button>
+                        </div>
+                      </div>
+                    </form>
+                    <!-- /.post -->
+                  </div>
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="timeline">
+                    <!-- The timeline -->
+<!--                    <form class="form-horizontal">-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputName" class="col-sm-2 col-form-label">Name</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <input type="email" class="form-control" id="inputName" placeholder="Name">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <input type="email" class="form-control" id="inputEmail" placeholder="Email">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputName2" class="col-sm-2 col-form-label">Name</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <input type="text" class="form-control" id="inputName2" placeholder="Name">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <input type="text" class="form-control" id="inputSkills" placeholder="Skills">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <div class="offset-sm-2 col-sm-10">-->
+<!--                          <div class="checkbox">-->
+<!--                            <label>-->
+<!--                              <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>-->
+<!--                            </label>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <div class="offset-sm-2 col-sm-10">-->
+<!--                          <button type="submit" class="btn btn-danger">Submit</button>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </form>-->
+                  </div>
+                  <!-- /.tab-pane -->
+
+                  <div class="tab-pane" id="settings">
+<!--                    <form class="form-horizontal">-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputName" class="col-sm-2 col-form-label">Name</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <input type="email" class="form-control" id="inputName" placeholder="Name">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <input type="email" class="form-control" id="inputEmail" placeholder="Email">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputName2" class="col-sm-2 col-form-label">Name</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <input type="text" class="form-control" id="inputName2" placeholder="Name">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>-->
+<!--                        <div class="col-sm-10">-->
+<!--                          <input type="text" class="form-control" id="inputSkills" placeholder="Skills">-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <div class="offset-sm-2 col-sm-10">-->
+<!--                          <div class="checkbox">-->
+<!--                            <label>-->
+<!--                              <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>-->
+<!--                            </label>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group row">-->
+<!--                        <div class="offset-sm-2 col-sm-10">-->
+<!--                          <button type="submit" class="btn btn-danger">Submit</button>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </form>-->
+                  </div>
+                  <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+            <!-- /.nav-tabs-custom -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+  </div>
+<!-- /.content-wrapper -->

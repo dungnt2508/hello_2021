@@ -56,3 +56,37 @@ part qlcamdo :
             login : done
      - build page view : 
             dashboard : doing
+
+
+----------------------------------------------------------
+- tên app : vietgold
+
+
++ module user :	/user
+		- đăng ký:	/register  --80%
+		- đăng nhập	/login  --80%
+		- thông tin giao dịch : theo ngày , tuần, năm	/user_id
+		
++ module khách hàng : /customer
+		- thông tin khách hàng : tên, giấy tờ, tài sản, sdt, ghi chú	/customer_id
+		- tạo 	/create
+		- sửa : thêm giấy tờ	/update/customer_id
+		- xóa	/delete/customer_id
+
+
++ module hóa đơn : /invoice
+		- danh sách hợp đồng : người soạn hợp đồng, ngày tạo, thông tin khách hàng, tài sản, lãi suất, tiền thu, tiền chi, ghi chú 
+		- chi tiết hợp đồng	/invoice_id
+		- tạo /create
+		- sửa /update
+		- xóa /delete
+
++ module cấu hình :	/setting
+		- chi tiết phí	/rates	-- Nghiệp vụ  
+		- phân quyền 	/rules	
+
+
++ module báo cáo : /dashboard
+		- báo cáo thông tin tài sản cần tất toán , thu chi
+  
+- hóa đơn cầm đồ -> thanh toán lãi , tất toán , thanh lý, bán

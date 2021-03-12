@@ -21,7 +21,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="{{ url_for('auth.login') }}"><b>Admin</b>LTE</a>
+    <a href="{{ url_for('user.login') }}"><b>Admin</b>LTE</a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
@@ -30,7 +30,7 @@
 
       <form name="login_form">
         <div class="input-group mb-3">
-          <input type="email" name="email" class="form-control" placeholder="Email">
+          <input type="text" name="user_name" class="form-control" placeholder="Username or email address">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -73,7 +73,7 @@
         <a href="#">I forgot my password</a>
       </p>
       <p class="mb-0">
-        <a href="{{ url_for('auth.register') }}" class="text-center">Register a new membership</a>
+        <a href="{{ url_for('user.register') }}" class="text-center">Register a new membership</a>
       </p>
     </div>
     <!-- /.login-card-body -->

@@ -35,10 +35,14 @@ def create_app(test_config=None):
 
     @app.route('/')
     def index():
-        return render_template('auth/login.html')
+        return render_template('user/login.html')
 
     from .api import routes
-    app.register_blueprint(routes.bp)
+    app.register_blueprint(routes.bp_user)
+    app.register_blueprint(routes.bp_customer)
+    app.register_blueprint(routes.bp_invoice)
+    app.register_blueprint(routes.bp_setting)
     app.register_blueprint(routes.bp_page)
+    app.register_blueprint(routes.bp_funds)
 
     return app

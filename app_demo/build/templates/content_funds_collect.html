@@ -1,0 +1,74 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Thêm Mới Nguồn Thu</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+              <li class="breadcrumb-item active">Thêm mới nguồn thu</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <!-- left column -->
+          <div class="col-md-6">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Thêm mới nguồn thu</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form name="funds_collect">
+                <div class="card-body">
+	                 <div class="form-group">
+                    <label for="price">Số tiền</label>
+                    <input type="number" name="price" class="form-control" id="price" placeholder="Nhập số tiền">
+                  </div>
+	                 <div class="form-group">
+                    <label for="source">Nguồn thu</label>
+                    <input type="text" name="source" class="form-control" id="source" placeholder="Nhập nguồn tiền">
+                  </div>
+	                <div class="form-group">
+                    <label for="user_created">Người nhập</label>
+                    <input type="text" name="user_created" class="form-control" id="user_created" value="{% if g.user %} {{g.user['name']}} {% endif %}" readonly="true">
+                  </div>
+
+	                <div class="form-group">
+                    <label for="note">Ghi chú</label>
+                    <input type="text" name="note" class="form-control" id="note" placeholder="Lý do thu...">
+                  </div>
+                </div>
+                <!-- /.card-body -->
+	              <div>
+		        <p class="error error--hidden">
+
+			    </p>
+	        </div>
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+
+
+          </div>
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+<!-- /.content-wrapper -->

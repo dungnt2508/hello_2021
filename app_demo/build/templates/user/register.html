@@ -21,7 +21,7 @@
 <body class="hold-transition register-page">
 <div class="register-box">
   <div class="register-logo">
-    <a href="{{ url_for('auth.register') }}"><b>Admin</b>LTE</a>
+    <a href="{{ url_for('user.register') }}"><b>Admin</b>LTE</a>
   </div>
 
   <div class="card">
@@ -30,7 +30,7 @@
 
       <form name="register_form">
         <div class="input-group mb-3">
-          <input type="text" name="name" class="form-control" placeholder="Full name">
+          <input type="text" name="fullname" class="form-control" placeholder="Full name">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -83,7 +83,7 @@
         </div>
       </form>
 
-      <a href="{{ url_for('auth.login') }}" class="text-center">I already have a membership</a>
+      <a href="{{ url_for('user.login') }}" class="text-center">I already have a membership</a>
     </div>
     <!-- /.form-box -->
   </div><!-- /.card -->
