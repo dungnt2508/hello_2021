@@ -36,7 +36,31 @@ $("form[name=register_form_nv]").submit(function(e){
         dataType: "json",
         success: function(resp){
             console.log(resp)
-            window.location.href = "/page/qlnhanvien";
+            window.location.href = "/user/filter";
+        },
+        error: function(resp){
+            console.log(resp)
+            $error.html(resp.responseJSON.error).removeClass("error--hidden");
+        }
+    })
+
+    e.preventDefault();
+});
+
+$("form[name=register_form_customer]").submit(function(e){
+
+    var $form = $(this);
+    var $error = $form.find(".error");
+    var data = $form.serialize();
+
+    $.ajax({
+        url: "/user/create/2",
+        type: "POST",
+        data: data,
+        dataType: "json",
+        success: function(resp){
+            console.log(resp)
+            window.location.href = "/customer/list";
         },
         error: function(resp){
             console.log(resp)
@@ -113,6 +137,7 @@ $("#item_kind").on("change",function(e){
             dataType: "json",
             success: function(resp){
                 console.log(kind_item)
+                console.log(resp)
                 $("#rate").val(resp/4);
                 $("#kind_item").val(kind_item);
 

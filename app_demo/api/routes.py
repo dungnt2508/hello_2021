@@ -11,11 +11,11 @@ bp_funds = Blueprint('funds',__name__, url_prefix='/funds')
 
 
 @bp_user.before_app_request
-@bp_page.before_app_request
-@bp_customer.before_app_request
-@bp_invoice.before_app_request
-@bp_setting.before_app_request
-@bp_funds.before_app_request
+# @bp_page.before_app_request
+# @bp_customer.before_app_request
+# @bp_invoice.before_app_request
+# @bp_setting.before_app_request
+# @bp_funds.before_app_request
 def load_logged_in_user():
     User.load_logged_in_user()
 
@@ -43,16 +43,6 @@ def create(type):
     :return:
     """
     return User().create(type)
-
-
-@bp_page.route('/invoice/<int:type>', methods=('GET','POST'))
-def invoice(type):
-    """
-
-    :param type: 1 : Vay / 2 : Mua / 3: Bán / 4 : Chuộc / 5 : TT lãi
-    :return:
-    """
-    return User().invoice(type)
 
 
 @bp_page.route('/dashboard', methods=['GET'])
@@ -98,6 +88,14 @@ def invoice_create():
 @bp_setting.route('/get_rate/<kind_item>', methods=['GET'])
 def get_rate(kind_item):
     return Settings().get_rate(int(kind_item))
+
+@bp_setting.route('/set_rule', methods=('GET','POST'))
+def set_rule():
+    return Settings().set_rules()
+
+@bp_setting.route('/set_rate', methods=('GET','POST'))
+def set_rate():
+    return Settings().set_rate()
 
 
 @bp_funds.route('/collect', methods=('GET','POST'))
