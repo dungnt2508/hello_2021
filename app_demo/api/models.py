@@ -354,8 +354,8 @@ class Invoice:
     def create(self):
         """
         - tạo hợp đồng
-        funds.collect.status : 1 : THU từ quản lý quỹ / 2 : THU từ tiền lãi
-        funds.spent.spent : 2 : CHI từ quản lý quỹ / 2 : CHI từ làm hợp đồng
+        funds.collect.type : 1 : THU từ quản lý quỹ / 2 : THU từ tiền lãi
+        funds.spent.type : 2 : CHI từ quản lý quỹ / 2 : CHI từ làm hợp đồng
         :return:
         """
         try:
@@ -436,7 +436,8 @@ class Invoice:
                     "to_date": to_date,
                     "user_created": g.user["user_name"],
                     "date_created": dt.datetime.now(),
-                    "status": 1,  # 1 : lập hợp đồng vay
+                    "type": 1,  # 1 : lập hợp đồng vay
+                    "status": 1,
                     "note": request.form.get("note")
                 }
                 funds = 0
@@ -452,7 +453,8 @@ class Invoice:
                             "source": invoice_pawn,
                             "user_created": g.user["user_name"],
                             "note": request.form.get("note"),
-                            "status": 2
+                            "type": 2,
+                            "status": 1
                         }
 
                     }
@@ -517,7 +519,9 @@ class Funds:
                         "price": str(price),
                         "source": source,
                         "user_created": user_created,
+                        "date_created": dt.datetime.now(),
                         "note": note,
+                        "type": 1,
                         "status": 1
                     }
 
@@ -547,7 +551,9 @@ class Funds:
                         "price": str(price),
                         "source": source,
                         "user_created": user_created,
+                        "date_created": dt.datetime.now(),
                         "note": note,
+                        "type": 1,
                         "status": 1
                     }
 
