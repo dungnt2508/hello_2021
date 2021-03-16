@@ -3,6 +3,7 @@ from passlib.hash import pbkdf2_sha256
 import uuid
 import datetime as dt
 from datetime import datetime
+from datetime import timedelta
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -362,7 +363,7 @@ class Invoice:
             if request.method == 'POST':
 
                 # create treasure object
-                invoice_id = request.form.get("invoice_id")
+                invoice_id = request.form.get("invoice_id").replace(" ", "")
                 item_kind = request.form.get("kind_item")
                 item_name = request.form.get("item_name")
 
@@ -434,6 +435,7 @@ class Invoice:
                     "days": days,
                     "from_date": from_date,
                     "to_date": to_date,
+                    "week": request.form.get("week"),
                     "user_created": g.user["user_name"],
                     "date_created": dt.datetime.now(),
                     "type": 1,  # 1 : lập hợp đồng vay
@@ -464,13 +466,66 @@ class Invoice:
             print(str(e))
         return render_template('invoice/create.html')
 
+    def pay(self):
+        """
+        - thanh toán lãi
+        funds.collect.type : 1 : THU từ quản lý quỹ / 2 : THU từ tiền lãi
+        funds.spent.type : 2 : CHI từ quản lý quỹ / 2 : CHI từ làm hợp đồng
+        :return:
+        """
+        try:
+            if request.method == 'POST':
+                # create treasure object
+                print(request.form)
+                invoice_id = request.form.get("invoice_id")
+                invoice_pay_week_ = request.form.get("invoice_pay_week_")
+                if invoice_pay_week_ is None or len(invoice_pay_week_) == 0 or int(invoice_pay_week_) < 1:
+                    error = 'Nhập số tuần cần gia hạn'
+                    return jsonify({"error": error}), 400
+
+                invoice_pay_to_date = request.form.get("invoice_pay_to_date")
+                date_time_obj = datetime.strptime(invoice_pay_to_date, '%Y-%m-%d')
+                print(date_time_obj + timedelta(days=int(invoice_pay_week_)*7))
+
+
+                # funds = 0
+                # if db.invoice.insert_one(invoice_pawn):
+                #     treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))
+                #     if treasure:
+                #         funds = int(treasure[0]["funds"])
+                #     funds_spent = {
+                #         "funds": str(funds - int(price)),
+                #         "spent": {
+                #             "_id": uuid.uuid4().hex,
+                #             "price": str(price),
+                #             "source": invoice_pawn,
+                #             "user_created": g.user["user_name"],
+                #             "note": request.form.get("note"),
+                #             "type": 2,
+                #             "status": 1
+                #         }
+                #
+                #     }
+                #     db.funds.insert_one(funds_spent)
+                return jsonify(), 200
+        except Exception as e:
+            print(str(e))
+        return render_template('invoice/create.html')
+
     def filter(self):
         try:
             invoices = list(db.invoice.find({}, {'_id': 0}))
             # print(invoices)
         except Exception as e:
             print(str(e))
-        return render_template('user/list.html', invoices=invoices)
+        return render_template('invoice/list.html', invoices=invoices)
+
+    def filter_one(self,id):
+        try:
+            invoices = db.invoice.find_one({"invoice_id": id}, {'_id': 0})
+        except Exception as e:
+            print(str(e))
+        return jsonify(invoices), 200
 
 
 class Settings:

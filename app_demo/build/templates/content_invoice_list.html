@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Danh sách khách hàng</h1>
+            <h1>Danh sách hợp đồng</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-              <li class="breadcrumb-item active">Danh sách khách hàng</li>
+              <li class="breadcrumb-item active">Danh sách hợp đồng</li>
             </ol>
           </div>
         </div>
@@ -30,35 +30,44 @@
               <table id="example1" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th>Mã KH</th>
+                  <th>Mã HĐ</th>
                   <th>Tên KH</th>
                   <th>SĐT</th>
-                  <th>Email</th>
-                  <th>CMND</th>
-	                <th>Địa chỉ</th>
+                  <th>Tài sản</th>
+                  <th>Số tiền vay</th>
+	                <th>Ngày vay</th>
+	                <th>Đến ngày</th>
+	                <th>Lãi phí </th>
+	                <th>Trạng thái</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for cus in customers %}
+                {% for invoice in invoices %}
                 <tr>
-                  <td>{{ cus['id'] }}</td>
-	                <td>{{ cus['name'] }}</td>
-	                <td>{{ cus['phone'] }}</td>
-	                <td>{{ cus['email'] }}</td>
-	                <td>{{ cus['cmnd'] }}</td>
-	                <td>{{ cus['address'] }}</td>
+                  <td>{{ invoice['invoice_id'] }}</td>
+                  <td>{{ invoice['customer']['name'] }}</td>
+                  <td>{{ invoice['customer']['phone'] }}</td>
+                  <td>{{ invoice['item_name'] }}</td>
+                  <td>{{ invoice['price_pawn'] }}</td>
+	                <td>{{ invoice['from_date'] }}</td>
+                  <td>{{ invoice['to_date'] }}</td>
+                  <td>{{ invoice['price_rate'] }}</td>
+	                <td>{{ invoice['status'] }}</td>
                 </tr>
                 {%  endfor %}
 
                 </tbody>
                 <tfoot>
                 <tr>
-                  <th>Mã KH</th>
+                  <th>Mã HĐ</th>
                   <th>Tên KH</th>
                   <th>SĐT</th>
-                  <th>Email</th>
-                  <th>CMND</th>
-	                <th>Địa chỉ</th>
+                  <th>Tài sản</th>
+                  <th>Số tiền vay</th>
+	                <th>Ngày vay</th>
+	                <th>Đến ngày</th>
+	                <th>Lãi phí</th>
+	                <th>Trạng thái</th>
                 </tr>
                 </tfoot>
               </table>

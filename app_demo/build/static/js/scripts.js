@@ -281,3 +281,80 @@ $("form[name=funds_spent]").submit(function(e){
 
     e.preventDefault();
 });
+
+
+$("form[name=invoice_pay]").submit(function(e){
+
+    var $form = $(this);
+    var $error = $form.find(".error");
+    var data = $form.serialize();
+    console.log(data)
+
+    $.ajax({
+        url: "/invoice/pay",
+        type: "POST",
+        data: data,
+        dataType: "json",
+        success: function(resp){
+            console.log(resp)
+            window.location.href = "/page/dashboard";
+        },
+        error: function(resp){
+            console.log(resp)
+            $error.html(resp.responseJSON.error).removeClass("error--hidden");
+        }
+    })
+
+    e.preventDefault();
+})
+
+
+$("#invoice_pay_id").on("input",function(e){
+        $("#invoice_pay_name").val("");
+        $("#invoice_pay_phone").val("");
+        $("#invoice_pay_email").val("");
+        $("#invoice_pay_cmnd").val("");
+        $("#invoice_pay_address").val("");
+        $("#invoice_pay_item_kind").val("");
+        $("#invoice_pay_item_name").val("");
+        $("#invoice_pay_from_date").val("");
+        $("#invoice_pay_to_date").val("");
+        $("#invoice_pay_rate").val("");
+        $("#invoice_pay_week").val("");
+        $("#invoice_pay_price").val("");
+        $("#invoice_pay_price_rate").val("");
+
+        var invoice_pay_id = $(this).val().replace(" ","")
+
+        if(invoice_pay_id.length > 6){
+            $.ajax({
+                url: "/invoice/filter_one/"+invoice_pay_id,
+                type: "GET",
+                dataType: "json",
+                success: function(resp){
+                    $("#invoice_pay_name").val(resp.customer.name);
+                    $("#invoice_pay_phone").val(resp.customer.phone);
+                    $("#invoice_pay_email").val(resp.customer.email);
+                    $("#invoice_pay_cmnd").val(resp.customer.cmnd);
+                    $("#invoice_pay_address").val(resp.customer.address);
+                    $("#invoice_pay_item_kind").val(resp.item_kind);
+                    $("#invoice_pay_item_name").val(resp.item_name);
+                    $("#invoice_pay_from_date").val(resp.from_date);
+                    $("#invoice_pay_to_date").val(resp.to_date);
+                    $("#invoice_pay_rate").val(resp.rate);
+                    $("#invoice_pay_week").val(resp.week);
+                    $("#invoice_pay_price").val(resp.price_pawn);
+                    $("#invoice_pay_price_rate").val(resp.price_rate);
+
+                },
+                error: function(resp){
+                    console.log(resp)
+
+                }
+            })
+        }
+
+
+
+    });
+

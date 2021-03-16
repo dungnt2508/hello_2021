@@ -79,10 +79,20 @@ def customer_filter_one(email):
 def invoice_filter():
     return Invoice().filter()
 
+@bp_invoice.route('/filter_one/<id>', methods=['GET'])
+def invoice_filter_one(id):
+    return Invoice().filter_one(id)
+
 
 @bp_invoice.route('/create', methods=('GET','POST'))
 def invoice_create():
     return Invoice().create()
+
+
+@bp_invoice.route('/pay', methods=('GET','POST'))
+def invoice_pay():
+    return Invoice().pay()
+
 
 
 @bp_setting.route('/get_rate/<kind_item>', methods=['GET'])
