@@ -356,23 +356,23 @@ class Invoice:
     def create(self):
         """
         - tạo hợp đồng
-        funds.collect.type : 1 : THU từ quản lý quỹ / 2 : THU từ tiền lãi
-        funds.spent.type : 2 : CHI từ quản lý quỹ / 2 : CHI từ làm hợp đồng
+        funds.collect.type : 1 : THU từ quản lý quỹ / 2 : THU từ tiền lãi  / 3 : THU từ tất toán
+        funds.spent.type : 1 : CHI từ quản lý quỹ / 2 : CHI từ làm hợp đồng
         :return:
         """
         try:
             if request.method == 'POST':
 
                 # create treasure object
-                invoice_id = request.form.get("invoice_id").replace(" ", "")
-                item_kind = request.form.get("kind_item")
-                item_name = request.form.get("item_name")
+                invoice_id = request.form.get("pawn_id").replace(" ", "")
+                item_kind = request.form.get("pawn_kind_item")
+                item_name = request.form.get("pawn_item_name")
 
-                name = request.form.get("name")
-                cmnd = request.form.get("cmnd")
-                from_date = request.form.get("from_date")
-                to_date = request.form.get("to_date")
-                price = request.form.get("price")
+                name = request.form.get("pawn_name")
+                cmnd = request.form.get("pawn_cmnd")
+                from_date = request.form.get("pawn_from_date")
+                to_date = request.form.get("pawn_to_date")
+                price = request.form.get("pawn_price")
 
                 if name is None or len(name) == 0:
                     error = 'Chưa nhập họ tên KH'
@@ -412,13 +412,13 @@ class Invoice:
                         "_id": uuid.uuid4().hex,
                         "id": db.customers.find().count() + 1,
                         "name": name,
-                        "email": request.form.get("email"),
-                        "phone": request.form.get("phone"),
+                        "email": request.form.get("pawn_email"),
+                        "phone": request.form.get("pawn_phone"),
                         "cmnd": cmnd,
                         "item_name": item_name,
                         # "cmnd_1": request.form.get("cmnd_1_customer"),
                         # "cmnd_2": request.form.get("cmnd_2_customer"),
-                        "address": request.form.get("address"),
+                        "address": request.form.get("pawn_address"),
                         "user_created": g.user["user_name"],
                         "date_created": dt.datetime.now()
                     }
@@ -430,18 +430,17 @@ class Invoice:
                     "item_kind": item_kind,
                     "item_name": item_name,
                     "customer": customer,
-                    "price_pawn": price,
-                    "rate": request.form.get("rate"),
-                    "price_rate": request.form.get("price_rate"),
+                    "price_pawn": int(price),
+                    "rate": request.form.get("pawn_rate"),
+                    "price_rate": int(request.form.get("pawn_price_rate")),
                     "days": days,
                     "from_date": from_date,
                     "to_date": to_date,
-                    "week": request.form.get("week"),
+                    "week": int(request.form.get("pawn_week")),
                     "user_created": g.user["user_name"],
                     "date_created": dt.datetime.now(),
-                    "type": 1,  # 1 : lập hợp đồng vay
                     "status": 1,
-                    "note": request.form.get("note")
+                    "note": request.form.get("pawn_note")
                 }
                 funds = 0
                 if db.invoice.insert_one(invoice_pawn):
@@ -455,7 +454,7 @@ class Invoice:
                             "price": str(price),
                             "source": invoice_pawn,
                             "user_created": g.user["user_name"],
-                            "note": request.form.get("note"),
+                            "note": request.form.get("pawn_note"),
                             "type": 2,
                             "status": 1
                         }
@@ -469,45 +468,71 @@ class Invoice:
 
     def pay(self):
         """
-        - thanh toán lãi
+        - thanh toán lãi : tính tiền lãi dựa vào số tuần muốn gia hạn
+            update from_date = ngày đến hạn thanh toán
+                    to_date = from_date + tuần gia hạn
+            insert tiền lãi + tiền trả trước (nếu có) vào khoản thu
         funds.collect.type : 1 : THU từ quản lý quỹ / 2 : THU từ tiền lãi
-        funds.spent.type : 2 : CHI từ quản lý quỹ / 2 : CHI từ làm hợp đồng
+        funds.spent.type : 1 : CHI từ quản lý quỹ / 2 : CHI từ làm hợp đồng
         :return:
         """
         try:
             if request.method == 'POST':
                 # create treasure object
-                print(request.form)
-                invoice_id = request.form.get("invoice_id")
-                invoice_pay_week_ = request.form.get("invoice_pay_week_")
-                if invoice_pay_week_ is None or len(invoice_pay_week_) == 0 or int(invoice_pay_week_) < 1:
+                pay_id = request.form.get("pay_id")
+                pay_week_ = request.form.get("pay_week_")   # tuần gia hạn
+                if pay_week_ is None or len(pay_week_) == 0 or int(pay_week_) < 1:
                     error = 'Nhập số tuần cần gia hạn'
                     return jsonify({"error": error}), 400
 
-                invoice_pay_to_date = request.form.get("invoice_pay_to_date")
-                date_time_obj = datetime.strptime(invoice_pay_to_date, '%Y-%m-%d')
-                print(date_time_obj + timedelta(days=int(invoice_pay_week_)*7))
+                pay_price_ = request.form.get("pay_price_")     # tiền gốc trả trước
+                if pay_price_ is None or len(pay_price_) == 0 :
+                    pay_price_ = 0
+                pay_from_date = request.form.get("pay_to_date")
+                pay_from_date_obj = datetime.strptime(pay_from_date, '%Y-%m-%d')    # ngày bắt đầu gia hạn
+                pay_to_date = (pay_from_date_obj + timedelta(days=int(pay_week_)*7))  # đến ngày
+                pay_to_date = datetime.strftime(pay_to_date,'%Y-%m-%d')
+
+                # tính lại hợp đồng
+                # tiền vay = tiền đã vay - tiền trả trước (nếu có)
+                price_pawn = int(request.form.get("pay_price")) - int(pay_price_)
+                # tiền lãi = (tiền lãi đã tính / tuần ) * tuần vay mới
+                price_rate = int(request.form.get("pay_price_rate"))/int(request.form.get("pay_week"))*int(pay_week_)
+                # khoản thu thực tế
+                price_collect = int(pay_price_) + int(request.form.get("pay_price_rate"))
+
+                # update hợp đồng + insert khoản thu
+                funds = 0
+                if db.invoice.update_one({"invoice_id":pay_id},
+                                                {
+                                                    "$set":{"week":pay_week_,
+                                                            "from_date": pay_from_date,
+                                                            "to_date": pay_to_date,
+                                                            "price_pawn": price_pawn,
+                                                            "price_rate": price_rate,
+                                                            "user_modify": g.user["user_name"],
+                                                            "date_modify": dt.datetime.now(),
+                                                            "days": (int(pay_week_)*7)
+                                                            }}):
+                    treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))
+                    if treasure:
+                        funds = int(treasure[0]["funds"])
+                    funds_collect = {
+                        "funds": str(funds + price_collect),   # + tiền lãi + tiền gốc trả trước (nếu có)
+                        "collect": {
+                            "_id": uuid.uuid4().hex,
+                            "price": str(price_collect),
+                            "source": {"invoice_id":pay_id},
+                            "user_created": g.user["user_name"],
+                            "note": request.form.get("pay_note"),
+                            "type": 2,  # 2. khoản thu từ lãi của hợp đồng
+                            "status": 1
+                        }
+
+                    }
+                    db.funds.insert_one(funds_collect)
 
 
-                # funds = 0
-                # if db.invoice.insert_one(invoice_pawn):
-                #     treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))
-                #     if treasure:
-                #         funds = int(treasure[0]["funds"])
-                #     funds_spent = {
-                #         "funds": str(funds - int(price)),
-                #         "spent": {
-                #             "_id": uuid.uuid4().hex,
-                #             "price": str(price),
-                #             "source": invoice_pawn,
-                #             "user_created": g.user["user_name"],
-                #             "note": request.form.get("note"),
-                #             "type": 2,
-                #             "status": 1
-                #         }
-                #
-                #     }
-                #     db.funds.insert_one(funds_spent)
                 return jsonify(), 200
         except Exception as e:
             print(str(e))
@@ -574,7 +599,7 @@ class Funds:
                         "_id": uuid.uuid4().hex,
                         "price": str(price),
                         "source": source,
-                        "user_created": user_created,
+                        "user_created": g.user["user_name"],
                         "date_created": dt.datetime.now(),
                         "note": note,
                         "type": 1,
@@ -606,7 +631,7 @@ class Funds:
                         "_id": uuid.uuid4().hex,
                         "price": str(price),
                         "source": source,
-                        "user_created": user_created,
+                        "user_created": g.user["user_name"],
                         "date_created": dt.datetime.now(),
                         "note": note,
                         "type": 1,

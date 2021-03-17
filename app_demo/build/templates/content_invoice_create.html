@@ -36,108 +36,108 @@
                 <div class="tab-content">
                   <div class="active tab-pane" id="pawn">
                     <form class="form-horizontal" name="invoice_pawn">
-	                    <div class="form-group row">
-                        <label for="invoice_id" class="col-sm-2 col-form-label">Mã HĐ</label>
+                        <div class="form-group row">
+                        <label for="pawn_id" class="col-sm-2 col-form-label">Mã HĐ</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" name="invoice_id" id="invoice_id" value="{% if g.user %} VG10010{{(g.total_invoice + 1)}} {% endif %}" readonly="true">
+                          <input type="text" class="form-control" name="pawn_id" id="pawn_id" value="{% if g.user %} VG10010{{(g.total_invoice + 1)}} {% endif %}" readonly="true">
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="name" class="col-sm-2 col-form-label">Tên KH *</label>
+                        <label for="pawn_name" class="col-sm-2 col-form-label">Tên KH *</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="name" name="name" placeholder="Họ và tên">
+                          <input type="text" class="form-control" id="pawn_name" name="pawn_name" placeholder="Họ và tên">
                         </div>
                       </div>
-	                     <div class="form-group row">
-                        <label for="cmnd" class="col-sm-2 col-form-label">Số CMND/Hộ chiếu</label>
+                         <div class="form-group row">
+                        <label for="pawn_cmnd" class="col-sm-2 col-form-label">Số CMND/Hộ chiếu</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="cmnd" name="cmnd" placeholder="Số CMND / Hộ chiếu">
+                          <input type="text" class="form-control" id="pawn_cmnd" name="pawn_cmnd" placeholder="Số CMND / Hộ chiếu">
                         </div>
                       </div>
-	                     <div class="form-group row">
-                        <label for="phone" class="col-sm-2 col-form-label">SĐT</label>
+                         <div class="form-group row">
+                        <label for="pawn_phone" class="col-sm-2 col-form-label">SĐT</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại">
+                          <input type="text" class="form-control" id="pawn_phone" name="pawn_phone" placeholder="Số điện thoại">
                         </div>
                       </div>
-	                    <div class="form-group row">
-                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                        <div class="form-group row">
+                        <label for="pawn_email" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                          <input type="email" class="form-control" id="pawn_email" name="pawn_email" placeholder="Email">
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="address" class="col-sm-2 col-form-label">Địa chỉ</label>
+                        <label for="pawn_address" class="col-sm-2 col-form-label">Địa chỉ</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="address" name="address" placeholder="Địa chỉ">
+                          <input type="text" class="form-control" id="pawn_address" name="pawn_address" placeholder="Địa chỉ">
                         </div>
                       </div>
-	                    <div class="form-group row">
-		                  <label class="col-sm-2 col-form-label">Loại tài sản</label>
-		                    <div class="col-sm-10">
-		                  <select class="form-control select2bs4" id="item_kind" name="item_kind" style="width: 100%;">
-		                    <option selected="selected"></option>
-			                  {%  for s in g.settings %}
-			                  <option value='{{s["kind_item"]}}'>{{ s['item_name']}}</option>
-			                  {% endfor %}
-		                  </select>
+                        <div class="form-group row">
+                          <label class="col-sm-2 col-form-label">Loại tài sản</label>
+                            <div class="col-sm-10">
+                          <select class="form-control select2bs4" id="pawn_item_kind" name="pawn_item_kind" style="width: 100%;">
+                            <option selected="selected"></option>
+                              {%  for s in g.settings %}
+                              <option value='{{s["kind_item"]}}'>{{ s['item_name']}}</option>
+                              {% endfor %}
+                          </select>
 
-		                    </div>
-		                     <input type="hidden" id="kind_item" name="kind_item" value="">
-		                </div>
-	                    <div class="form-group row">
-                        <label for="item_name" class="col-sm-2 col-form-label">Tên tài sản</label>
+                            </div>
+                             <input type="hidden" id="pawn_kind_item" name="pawn_kind_item" value="">
+                        </div>
+                        <div class="form-group row">
+                        <label for="pawn_item_name" class="col-sm-2 col-form-label">Tên tài sản</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="item_name" name="item_name" placeholder="Tên tài sản">
+                          <input type="text" class="form-control" id="pawn_item_name" name="pawn_item_name" placeholder="Tên tài sản">
                         </div>
                       </div>
-	                    <div class="form-group row">
-                        <label for="price" class="col-sm-2 col-form-label">Số tiền vay</label>
+                        <div class="form-group row">
+                        <label for="pawn_price" class="col-sm-2 col-form-label">Số tiền vay</label>
                         <div class="col-sm-10">
-                          <input type="number" class="form-control" id="price" name="price" placeholder="Số tiền vay">
+                          <input type="number" class="form-control" id="pawn_price" name="pawn_price" placeholder="Số tiền vay">
                         </div>
                       </div>
-	                    <div class="form-group row">
-                        <label for="from_date" class="col-sm-2 col-form-label">Ngày vay</label>
+                        <div class="form-group row">
+                        <label for="pawn_from_date" class="col-sm-2 col-form-label">Ngày vay</label>
                         <div class="col-sm-10">
-                          <input type="date"  class="form-control" id="from_date" name="from_date" placeholder="Ngày vay">
+                          <input type="date"  class="form-control" id="pawn_from_date" name="pawn_from_date" placeholder="Ngày vay">
                         </div>
                       </div>
-	                    <div class="form-group row">
-                        <label for="to_date" class="col-sm-2 col-form-label">Đến ngày</label>
+                        <div class="form-group row">
+                        <label for="pawn_to_date" class="col-sm-2 col-form-label">Đến ngày</label>
                         <div class="col-sm-10">
-                          <input type="date" class="form-control" id="to_date" name="to_date" placeholder="Đến ngày">
+                          <input type="date" class="form-control" id="pawn_to_date" name="pawn_to_date" placeholder="Đến ngày">
                         </div>
                       </div>
-	                    <div class="form-group row">
-                        <label for="rate" class="col-sm-2 col-form-label">%Lãi/tuần</label>
+                        <div class="form-group row">
+                        <label for="pawn_rate" class="col-sm-2 col-form-label">%Lãi/tuần</label>
                         <div class="col-sm-10">
-	                        <input type="text" class="form-control" name="rate" id="rate" placeholder="" readonly="true">
+                            <input type="text" class="form-control" name="pawn_rate" id="pawn_rate" placeholder="" readonly="true">
                         </div>
                       </div>
-	                    <div class="form-group row">
-                        <label for="week" class="col-sm-2 col-form-label">Số tuần vay</label>
+                        <div class="form-group row">
+                        <label for="pawn_week" class="col-sm-2 col-form-label">Số tuần vay</label>
                         <div class="col-sm-10">
-	                        <input type="text" class="form-control" name="week" id="week" placeholder="" readonly="true">
+                            <input type="text" class="form-control" name="pawn_week" id="pawn_week" placeholder="" readonly="true">
                         </div>
                       </div>
-	                    <div class="form-group row">
-                        <label for="price_rate" class="col-sm-2 col-form-label">Lãi phí dự kiến</label>
+                        <div class="form-group row">
+                        <label for="pawn_price_rate" class="col-sm-2 col-form-label">Lãi phí dự kiến</label>
                         <div class="col-sm-10">
-	                        <input type="text" class="form-control" name="price_rate" id="price_rate" placeholder="" readonly="true">
+                            <input type="text" class="form-control" name="pawn_price_rate" id="pawn_price_rate" placeholder="" readonly="true">
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="note" class="col-sm-2 col-form-label">Ghi chú</label>
+                        <label for="pawn_note" class="col-sm-2 col-form-label">Ghi chú</label>
                         <div class="col-sm-10">
-                          <textarea class="form-control" id="note" name="note" placeholder="Ghi chú"></textarea>
+                          <textarea class="form-control" id="pawn_note" name="pawn_note" placeholder="Ghi chú"></textarea>
                         </div>
                       </div>
-	                    <div>
-					        <p class="error error--hidden">
+                        <div>
+                            <p class="error error--hidden">
 
-						    </p>
-				        </div>
+                            </p>
+                        </div>
 
                       <div class="form-group row">
                         <div class="offset-sm-2 col-sm-10">
@@ -151,107 +151,107 @@
                   <div class="tab-pane" id="pay">
                     <form class="form-horizontal" name="invoice_pay">
 	                    <div class="form-group row">
-                        <label for="invoice_pay_id" class="col-sm-2 col-form-label">Mã HĐ</label>
+                        <label for="pay_id" class="col-sm-2 col-form-label">Mã HĐ</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" name="invoice_pay_id" id="invoice_pay_id" value="">
+                          <input type="text" class="form-control" name="pay_id" id="pay_id" value="">
 
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="invoice_pay_name" class="col-sm-2 col-form-label">Tên KH *</label>
+                        <label for="pay_name" class="col-sm-2 col-form-label">Tên KH *</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="invoice_pay_name" name="invoice_pay_name" readonly="true">
+                          <input type="text" class="form-control" id="pay_name" name="pay_name" readonly="true">
                         </div>
                       </div>
 	                     <div class="form-group row">
-                        <label for="invoice_pay_cmnd" class="col-sm-2 col-form-label">Số CMND/Hộ chiếu</label>
+                        <label for="pay_cmnd" class="col-sm-2 col-form-label">Số CMND/Hộ chiếu</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="invoice_pay_cmnd" name="invoice_pay_cmnd" readonly="true">
+                          <input type="text" class="form-control" id="pay_cmnd" name="pay_cmnd" readonly="true">
                         </div>
                       </div>
 	                     <div class="form-group row">
-                        <label for="invoice_pay_phone" class="col-sm-2 col-form-label">SĐT</label>
+                        <label for="pay_phone" class="col-sm-2 col-form-label">SĐT</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="invoice_pay_phone" name="invoice_pay_phone" readonly="true">
+                          <input type="text" class="form-control" id="pay_phone" name="pay_phone" readonly="true">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_email" class="col-sm-2 col-form-label">Email</label>
+                        <label for="pay_email" class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                          <input type="email" class="form-control" id="invoice_pay_email" name="invoice_pay_email" readonly="true">
+                          <input type="email" class="form-control" id="pay_email" name="pay_email" readonly="true">
                         </div>
                       </div>
 
 	                    <div class="form-group row">
-                        <label for="invoice_pay_address" class="col-sm-2 col-form-label">Địa chỉ</label>
+                        <label for="pay_address" class="col-sm-2 col-form-label">Địa chỉ</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="invoice_pay_address" name="invoice_pay_address" readonly="true">
+                          <input type="text" class="form-control" id="pay_address" name="pay_address" readonly="true">
                         </div>
                       </div>
 	                     <div class="form-group row">
-                        <label for="invoice_pay_item_kind" class="col-sm-2 col-form-label">Loại tài sản</label>
+                        <label for="pay_item_kind" class="col-sm-2 col-form-label">Loại tài sản</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="invoice_pay_item_kind" name="invoice_pay_item_kind" readonly="true">
+                          <input type="text" class="form-control" id="pay_item_kind" name="pay_item_kind" readonly="true">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_item_name" class="col-sm-2 col-form-label">Tên tài sản</label>
+                        <label for="pay_item_name" class="col-sm-2 col-form-label">Tên tài sản</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="invoice_pay_item_name" name="invoice_pay_item_name" readonly="true">
+                          <input type="text" class="form-control" id="pay_item_name" name="pay_item_name" readonly="true">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_price" class="col-sm-2 col-form-label">Số tiền vay</label>
+                        <label for="pay_price" class="col-sm-2 col-form-label">Số tiền vay</label>
                         <div class="col-sm-10">
-                          <input type="number" class="form-control" id="invoice_pay_price" name="invoice_pay_price" readonly="true">
+                          <input type="number" class="form-control" id="pay_price" name="pay_price" readonly="true">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_from_date" class="col-sm-2 col-form-label">Ngày vay</label>
+                        <label for="pay_from_date" class="col-sm-2 col-form-label">Ngày vay</label>
                         <div class="col-sm-10">
-                          <input type="date"  class="form-control" id="invoice_pay_from_date" name="invoice_pay_from_date" readonly="true">
+                          <input type="date"  class="form-control" id="pay_from_date" name="pay_from_date" readonly="true">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_to_date" class="col-sm-2 col-form-label">Đến ngày</label>
+                        <label for="pay_to_date" class="col-sm-2 col-form-label">Đến ngày</label>
                         <div class="col-sm-10">
-                          <input type="date" class="form-control" id="invoice_pay_to_date" name="invoice_pay_to_date" readonly="true">
+                          <input type="date" class="form-control" id="pay_to_date" name="pay_to_date" readonly="true">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_rate" class="col-sm-2 col-form-label">%Lãi/tuần</label>
+                        <label for="pay_rate" class="col-sm-2 col-form-label">%Lãi/tuần</label>
                         <div class="col-sm-10">
-	                        <input type="text" class="form-control" name="invoice_pay_rate" id="invoice_pay_rate" placeholder="" readonly="true">
+	                        <input type="text" class="form-control" name="pay_rate" id="pay_rate" placeholder="" readonly="true">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_week" class="col-sm-2 col-form-label">Số tuần vay</label>
+                        <label for="pay_week" class="col-sm-2 col-form-label">Số tuần vay</label>
                         <div class="col-sm-10">
-	                        <input type="text" class="form-control" name="invoice_pay_week" id="invoice_pay_week" placeholder="" readonly="true">
+	                        <input type="text" class="form-control" name="pay_week" id="pay_week" placeholder="" readonly="true">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_price_rate" class="col-sm-2 col-form-label">Lãi phí</label>
+                        <label for="pay_price_rate" class="col-sm-2 col-form-label">Lãi phí</label>
                         <div class="col-sm-10">
-	                        <input type="text" class="form-control" name="invoice_pay_price_rate" id="invoice_pay_price_rate" placeholder="" readonly="true">
+	                        <input type="text" class="form-control" name="pay_price_rate" id="pay_price_rate" placeholder="" readonly="true">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_price_" class="col-sm-2 col-form-label">Tiền gốc thu trước (nếu có)</label>
+                        <label for="pay_price_" class="col-sm-2 col-form-label">Tiền gốc thu trước (nếu có)</label>
                         <div class="col-sm-10">
-	                        <input type="text" class="form-control" name="invoice_pay_price_" id="invoice_pay_price_" placeholder="">
+	                        <input type="text" class="form-control" name="pay_price_" id="pay_price_" placeholder="">
                         </div>
                       </div>
 	                    <div class="form-group row">
-                        <label for="invoice_pay_week_" class="col-sm-2 col-form-label">Số tuần gia hạn</label>
+                        <label for="pay_week_" class="col-sm-2 col-form-label">Số tuần gia hạn</label>
                         <div class="col-sm-10">
-	                        <input type="text" class="form-control" name="invoice_pay_week_" id="invoice_pay_week_" placeholder="">
+	                        <input type="text" class="form-control" name="pay_week_" id="pay_week_" placeholder="">
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="invoice_pay_note" class="col-sm-2 col-form-label">Ghi chú</label>
+                        <label for="pay_note" class="col-sm-2 col-form-label">Ghi chú</label>
                         <div class="col-sm-10">
-                          <textarea class="form-control" id="invoice_pay_note" name="invoice_pay_note"></textarea>
+                          <textarea class="form-control" id="pay_note" name="pay_note"></textarea>
                         </div>
                       </div>
 

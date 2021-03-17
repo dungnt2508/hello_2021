@@ -122,11 +122,11 @@ $("form[name=invoice_pawn]").submit(function(e){
 })
 
 
-$("#item_kind").on("change",function(e){
-        $("#from_date").val("");
-        $("#to_date").val("");
-        $("#price_rate").val("");
-        $("#week").val("");
+$("#pawn_item_kind").on("change",function(e){
+        $("#pawn_from_date").val("");
+        $("#pawn_to_date").val("");
+        $("#pawn_price_rate").val("");
+        $("#pawn_week").val("");
 
         var kind_item = $.parseJSON(this.value);
 
@@ -138,8 +138,8 @@ $("#item_kind").on("change",function(e){
             success: function(resp){
                 console.log(kind_item)
                 console.log(resp)
-                $("#rate").val(resp/4);
-                $("#kind_item").val(kind_item);
+                $("#pawn_rate").val(resp/4);
+                $("#pawn_kind_item").val(kind_item);
 
             },
             error: function(resp){
@@ -152,30 +152,30 @@ $("#item_kind").on("change",function(e){
     });
 
 
-$("#to_date").on("change",function(e){
+$("#pawn_to_date").on("change",function(e){
         //Getting Value
-        var item_kind = $("#item_kind").val();
+        var item_kind = $("#pawn_item_kind").val();
         if(item_kind.length == 0){
             alert("Bạn cần chọn loại tài sản để hệ thống tính lãi !")
-            $("#to_date").val("");
+            $("#pawn_to_date").val("");
             return
         }
 
-        var price = $("#price").val()
+        var price = $("#pawn_price").val()
         if(price.length == 0){
             alert("Bạn cần nhập số tiền vay để hệ thống tính lãi !")
-            $("#to_date").val("");
+            $("#pawn_to_date").val("");
             return
         }
 
-        var from_date = $("#from_date").val();
+        var from_date = $("#pawn_from_date").val();
         if(from_date.length == 0){
             alert("Bạn cần nhập ngày vay để hệ thống tính lãi")
-            $("#to_date").val("");
+            $("#pawn_to_date").val("");
             return
         }
 
-        var to_date = $("#to_date").val()
+        var to_date = $("#pawn_to_date").val()
 
 
         var startDay = new Date(from_date);
@@ -184,10 +184,10 @@ $("#to_date").on("change",function(e){
         var days = 1 + (millisBetween / (1000 * 3600 * 24));
         if(days <=0 ){
             alert("Ngày vay không thể nhỏ hơn ngày đến hạn trả lãi")
-            $("#from_date").val("");
-            $("#to_date").val("");
-            $("#price_rate").val("");
-            $("#week").val("");
+            $("#pawn_from_date").val("");
+            $("#pawn_to_date").val("");
+            $("#pawn_price_rate").val("");
+            $("#pawn_week").val("");
             return
         }
         if(days > 0 ){
@@ -202,34 +202,34 @@ $("#to_date").on("change",function(e){
                 week = Math.floor(days/7) + 1
             }
 
-            var rate = $("#rate").val();
+            var rate = $("#pawn_rate").val();
             var rate_pawn = price * (week * rate/100)
 
-            $("#week").val(week);
-            $("#price_rate").val(rate_pawn);
+            $("#pawn_week").val(week);
+            $("#pawn_price_rate").val(rate_pawn);
         }
 
     });
 
-$("#from_date").on("change",function(e){
+$("#pawn_from_date").on("change",function(e){
         //Getting Value
-        var price_rate = $("#price_rate").val();
+        var price_rate = $("#pawn_price_rate").val();
         if(price_rate.length != 0){
-            $("#to_date").val("");
-            $("#price_rate").val("");
-            $("#week").val("");
+            $("#pawn_to_date").val("");
+            $("#pawn_price_rate").val("");
+            $("#pawn_week").val("");
         }
 
     });
 
-$("#price").on("change",function(e){
+$("#pawn_price").on("change",function(e){
         //Getting Value
-        var price_rate = $("#price_rate").val();
+        var price_rate = $("#pawn_price_rate").val();
         if(price_rate.length != 0){
-            $("#from_date").val("");
-            $("#to_date").val("");
-            $("#price_rate").val("");
-            $("#week").val("");
+            $("#pawn_from_date").val("");
+            $("#pawn_to_date").val("");
+            $("#pawn_price_rate").val("");
+            $("#pawn_week").val("");
         }
 
     });
@@ -309,42 +309,42 @@ $("form[name=invoice_pay]").submit(function(e){
 })
 
 
-$("#invoice_pay_id").on("input",function(e){
-        $("#invoice_pay_name").val("");
-        $("#invoice_pay_phone").val("");
-        $("#invoice_pay_email").val("");
-        $("#invoice_pay_cmnd").val("");
-        $("#invoice_pay_address").val("");
-        $("#invoice_pay_item_kind").val("");
-        $("#invoice_pay_item_name").val("");
-        $("#invoice_pay_from_date").val("");
-        $("#invoice_pay_to_date").val("");
-        $("#invoice_pay_rate").val("");
-        $("#invoice_pay_week").val("");
-        $("#invoice_pay_price").val("");
-        $("#invoice_pay_price_rate").val("");
+$("#pay_id").on("input",function(e){
+        $("#pay_name").val("");
+        $("#pay_phone").val("");
+        $("#pay_email").val("");
+        $("#pay_cmnd").val("");
+        $("#pay_address").val("");
+        $("#pay_item_kind").val("");
+        $("#pay_item_name").val("");
+        $("#pay_from_date").val("");
+        $("#pay_to_date").val("");
+        $("#pay_rate").val("");
+        $("#pay_week").val("");
+        $("#pay_price").val("");
+        $("#pay_price_rate").val("");
 
-        var invoice_pay_id = $(this).val().replace(" ","")
+        var pay_id = $(this).val().replace(" ","")
 
-        if(invoice_pay_id.length > 6){
+        if(pay_id.length > 6){
             $.ajax({
-                url: "/invoice/filter_one/"+invoice_pay_id,
+                url: "/invoice/filter_one/"+pay_id,
                 type: "GET",
                 dataType: "json",
                 success: function(resp){
-                    $("#invoice_pay_name").val(resp.customer.name);
-                    $("#invoice_pay_phone").val(resp.customer.phone);
-                    $("#invoice_pay_email").val(resp.customer.email);
-                    $("#invoice_pay_cmnd").val(resp.customer.cmnd);
-                    $("#invoice_pay_address").val(resp.customer.address);
-                    $("#invoice_pay_item_kind").val(resp.item_kind);
-                    $("#invoice_pay_item_name").val(resp.item_name);
-                    $("#invoice_pay_from_date").val(resp.from_date);
-                    $("#invoice_pay_to_date").val(resp.to_date);
-                    $("#invoice_pay_rate").val(resp.rate);
-                    $("#invoice_pay_week").val(resp.week);
-                    $("#invoice_pay_price").val(resp.price_pawn);
-                    $("#invoice_pay_price_rate").val(resp.price_rate);
+                    $("#pay_name").val(resp.customer.name);
+                    $("#pay_phone").val(resp.customer.phone);
+                    $("#pay_email").val(resp.customer.email);
+                    $("#pay_cmnd").val(resp.customer.cmnd);
+                    $("#pay_address").val(resp.customer.address);
+                    $("#pay_item_kind").val(resp.item_kind);
+                    $("#pay_item_name").val(resp.item_name);
+                    $("#pay_from_date").val(resp.from_date);
+                    $("#pay_to_date").val(resp.to_date);
+                    $("#pay_rate").val(resp.rate);
+                    $("#pay_week").val(resp.week);
+                    $("#pay_price").val(resp.price_pawn);
+                    $("#pay_price_rate").val(resp.price_rate);
 
                 },
                 error: function(resp){
