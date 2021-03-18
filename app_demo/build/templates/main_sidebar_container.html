@@ -106,7 +106,23 @@
               <li class="nav-item">
                 <a href="{{ url_for('invoice.invoice_create') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Tạo hợp đồng</p>
+                  <p>Lập hợp đồng</p>
+                </a>
+              </li>
+            </ul>
+			   <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url_for('invoice.invoice_pay') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Thanh toán lãi</p>
+                </a>
+              </li>
+            </ul>
+			   <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url_for('invoice.invoice_redeem') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Tất toán</p>
                 </a>
               </li>
             </ul>

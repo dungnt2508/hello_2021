@@ -345,7 +345,6 @@ $("#pay_id").on("input",function(e){
                     $("#pay_week").val(resp.week);
                     $("#pay_price").val(resp.price_pawn);
                     $("#pay_price_rate").val(resp.price_rate);
-
                 },
                 error: function(resp){
                     console.log(resp)
@@ -353,8 +352,74 @@ $("#pay_id").on("input",function(e){
                 }
             })
         }
-
-
-
     });
 
+$("#redeem_id").on("input",function(e){
+        $("#redeem_name").val("");
+        $("#redeem_phone").val("");
+        $("#redeem_email").val("");
+        $("#redeem_cmnd").val("");
+        $("#redeem_address").val("");
+        $("#redeem_item_kind").val("");
+        $("#redeem_item_name").val("");
+        $("#redeem_from_date").val("");
+        $("#redeem_to_date").val("");
+        $("#redeem_rate").val("");
+        $("#redeem_week").val("");
+        $("#redeem_price").val("");
+        $("#redeem_price_rate").val("");
+
+        var redeem_id = $(this).val().replace(" ","")
+
+        if(redeem_id.length > 6){
+            $.ajax({
+                url: "/invoice/filter_one/"+redeem_id,
+                type: "GET",
+                dataType: "json",
+                success: function(resp){
+                    $("#redeem_name").val(resp.customer.name);
+                    $("#redeem_phone").val(resp.customer.phone);
+                    $("#redeem_email").val(resp.customer.email);
+                    $("#redeem_cmnd").val(resp.customer.cmnd);
+                    $("#redeem_address").val(resp.customer.address);
+                    $("#redeem_item_kind").val(resp.item_kind);
+                    $("#redeem_item_name").val(resp.item_name);
+                    $("#redeem_from_date").val(resp.from_date);
+                    $("#redeem_to_date").val(resp.to_date);
+                    $("#redeem_rate").val(resp.rate);
+                    $("#redeem_week").val(resp.week);
+                    $("#redeem_price").val(resp.price_pawn);
+                    $("#redeem_price_rate").val(resp.price_rate);
+                },
+                error: function(resp){
+                    console.log(resp)
+
+                }
+            })
+        }
+    });
+
+$("form[name=invoice_redeem]").submit(function(e){
+
+    var $form = $(this);
+    var $error = $form.find(".error");
+    var data = $form.serialize();
+    console.log(data)
+
+    $.ajax({
+        url: "/invoice/redeem",
+        type: "POST",
+        data: data,
+        dataType: "json",
+        success: function(resp){
+            console.log(resp)
+            window.location.href = "/page/dashboard";
+        },
+        error: function(resp){
+            console.log(resp)
+            $error.html(resp.responseJSON.error).removeClass("error--hidden");
+        }
+    })
+
+    e.preventDefault();
+})

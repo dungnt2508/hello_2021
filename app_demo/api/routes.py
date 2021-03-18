@@ -94,6 +94,11 @@ def invoice_pay():
     return Invoice().pay()
 
 
+@bp_invoice.route('/redeem', methods=('GET','POST'))
+def invoice_redeem():
+    return Invoice().redeem()
+
+
 
 @bp_setting.route('/get_rate/<kind_item>', methods=['GET'])
 def get_rate(kind_item):
