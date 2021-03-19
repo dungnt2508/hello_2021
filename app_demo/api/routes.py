@@ -79,6 +79,14 @@ def customer_filter_one(email):
 def invoice_filter():
     return Invoice().filter()
 
+@bp_invoice.route('/filter/expired', methods=['GET'])
+def invoice_filter_expired():
+    return Invoice().filter_expired()
+
+@bp_invoice.route('/filter/over_expired', methods=['GET'])
+def invoice_filter_over_expired():
+    return Invoice().filter_over_expired()
+
 @bp_invoice.route('/filter_one/<id>', methods=['GET'])
 def invoice_filter_one(id):
     return Invoice().filter_one(id)

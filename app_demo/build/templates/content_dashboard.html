@@ -28,14 +28,13 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>{% if g.user %} {{g.total_invoice}} {% endif %}</h3>
-
-                <p>Hợp đồng</p>
+                <h3>{{ count_expired }}</h3>
+                <p>Hợp đồng đến hạn</p>
               </div>
               <div class="icon">
                 <i class="ion ion-bag"></i>
               </div>
-              <a href="{{ url_for('invoice.invoice_filter') }}" class="small-box-footer">Chi tiết... <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ url_for('invoice.invoice_filter_expired') }}" class="small-box-footer">Chi tiết... <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -44,14 +43,14 @@
             <div class="small-box bg-success">
               <div class="inner">
 <!--                <h3>53<sup style="font-size: 20px">%</sup></h3>-->
-	              <h3>{% if g.user %} {{g.total_customer}} {% endif %}</h3>
+	               <h3>{{ count_over_expired }}</h3>
 
-                <p>Khách hàng</p>
+                <p>Hợp đồng quá hạn</p>
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
               </div>
-              <a href="{{ url_for('customer.customer_filter') }}" class="small-box-footer">Chi tiết... <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ url_for('invoice.invoice_filter_over_expired') }}" class="small-box-footer">Chi tiết... <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -90,7 +89,68 @@
         <!-- Main row -->
         <div class="row">
           <!-- Left col -->
-          <section class="col-lg-7 connectedSortable">
+          <section class="col-lg-9 connectedSortable">
+	           <!-- /.card-header -->
+            <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title"></h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+              <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Mã HĐ</th>
+                  <th>Tên KH</th>
+                  <th>SĐT</th>
+                  <th>Tài sản</th>
+                  <th>Số tiền vay</th>
+	                <th>Ngày vay</th>
+	                <th>Đến ngày</th>
+	                <th>Lãi phí </th>
+	                <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for invoice in g.invoices %}
+                <tr>
+                  <td>{{ invoice['invoice_id'] }}</td>
+                  <td>{{ invoice['customer']['name'] }}</td>
+                  <td>{{ invoice['customer']['phone'] }}</td>
+                  <td>{{ invoice['item_name'] }}</td>
+                  <td>{{ invoice['price_pawn'] }}</td>
+	                <td>{{ invoice['from_date'] }}</td>
+                  <td>{{ invoice['to_date'] }}</td>
+                  <td>{{ invoice['price_rate'] }}</td>
+	                <td>{{ invoice['status'] }}</td>
+                </tr>
+                {%  endfor %}
+
+                </tbody>
+                <tfoot>
+                <tr>
+                  <th>Mã HĐ</th>
+                  <th>Tên KH</th>
+                  <th>SĐT</th>
+                  <th>Tài sản</th>
+                  <th>Số tiền vay</th>
+	                <th>Ngày vay</th>
+	                <th>Đến ngày</th>
+	                <th>Lãi phí</th>
+	                <th>Trạng thái</th>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+            <!-- /.card-body -->
 
             <!-- DIRECT CHAT -->
             <div class="card direct-chat direct-chat-primary">

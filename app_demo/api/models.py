@@ -3,6 +3,9 @@ from passlib.hash import pbkdf2_sha256
 import uuid
 import datetime as dt
 from datetime import datetime
+from datetime import date
+
+
 from datetime import timedelta
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -11,7 +14,6 @@ from app_demo.db import db
 from instance.rule_name import create_user_name
 
 import pandas as pd
-#aaaa
 
 
 class User:
@@ -38,7 +40,8 @@ class User:
                 g.settings = db.settings.find({"status": "1"}, {"_id": 0})
                 g.total_invoice = 0
                 if db.invoice.find(({"status": 1})).count() > 0:
-                    g.total_invoice = db.invoice.find(({"status": 1})).count()
+                    g.total_invoice = db.invoice.find().count()
+                    g.invoices = db.invoice.find()
                 g.total_customer = db.customers.find().count()
                 g.customer = []
                 if g.total_customer != 0:
@@ -51,6 +54,8 @@ class User:
                 # print(g.settings)
                 g.logs = list(db.logs.find({},{"_id": 0}))
                 # print(g.logs)
+                # setting filter
+                g.pipeline_filter = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': -1 } } } }, { '$match': { 'status_invoice': '%s' } } ]"
 
         except Exception as e:
             print(str(e))
@@ -194,11 +199,17 @@ class User:
             show dashboard
         :return:
         """
+        count_exprired = 0
+        count_over_expired = 0
         try:
-            pass
+            today = str(date.today())
+
+            count_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter % (today, today, today, '1')))))
+            count_over_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter % (today, today, today, '2')))))
+
         except Exception as e:
             print(str(e))
-        return render_template('page/dashboard.html')
+        return render_template('page/dashboard.html', count_expired=count_expired, count_over_expired=count_over_expired)
 
     def filter(self):
         """
@@ -540,6 +551,33 @@ class Invoice:
         except Exception as e:
             print(str(e))
         return render_template('invoice/list.html', invoices=invoices)
+
+    def filter_expired(self):
+        """
+         filter hợp đồng đến hạn : status in (1,2) và to_date = today()
+        :return:
+        """
+        invoices = []
+        try:
+
+            today = str(date.today())
+            invoices = list(db.invoice.aggregate(eval(g.pipeline_filter % (today, today, today, '1'))))
+        except Exception as e:
+            print(str(e))
+        return render_template('invoice/list.html', invoices=invoices, count_invoice=len(invoices))
+
+    def filter_over_expired(self):
+        """
+            filter hợp đồng quá hạn : status in (1,2) và to_date > today()
+        :return:
+        """
+        invoices = []
+        try:
+            today = str(date.today())
+            invoices = list(db.invoice.aggregate(eval(g.pipeline_filter % (today, today, today, '2'))))
+        except Exception as e:
+            print(str(e))
+        return render_template('invoice/list.html', invoices=invoices, count_invoice=len(invoices))
 
     def filter_one(self,id):
         try:
