@@ -55,7 +55,8 @@ class User:
                 g.logs = list(db.logs.find({},{"_id": 0}))
                 # print(g.logs)
                 # setting filter
-                g.pipeline_filter = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': -1 } } } }, { '$match': { 'status_invoice': '%s' } } ]"
+                g.pipeline_filter_status = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': '-1' } } } },{ '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'-1' } } } }, { '$match': { 'status_invoice': '%s' } } ]"
+                g.pipeline_filter_all = "[ { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':{ '$switch':{ 'branches':[ { 'case':{ '$and':[ { '$gt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'0' }, { 'case':{ '$and':[ { '$eq':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'1' }, { 'case':{ '$and':[ { '$lt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'2' } ], 'default':'-1' } } } }, { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'-1' } } } } ]"
 
         except Exception as e:
             print(str(e))
@@ -204,12 +205,13 @@ class User:
         try:
             today = str(date.today())
 
-            count_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter % (today, today, today, '1')))))
-            count_over_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter % (today, today, today, '2')))))
+            count_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '1')))))
+            count_over_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '2')))))
+            invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_all % (today, today, today))))
 
         except Exception as e:
             print(str(e))
-        return render_template('page/dashboard.html', count_expired=count_expired, count_over_expired=count_over_expired)
+        return render_template('page/dashboard.html', count_expired=count_expired, count_over_expired=count_over_expired, invoices=invoices)
 
     def filter(self):
         """
@@ -561,7 +563,7 @@ class Invoice:
         try:
 
             today = str(date.today())
-            invoices = list(db.invoice.aggregate(eval(g.pipeline_filter % (today, today, today, '1'))))
+            invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '1'))))
         except Exception as e:
             print(str(e))
         return render_template('invoice/list.html', invoices=invoices, count_invoice=len(invoices))
@@ -574,7 +576,7 @@ class Invoice:
         invoices = []
         try:
             today = str(date.today())
-            invoices = list(db.invoice.aggregate(eval(g.pipeline_filter % (today, today, today, '2'))))
+            invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '2'))))
         except Exception as e:
             print(str(e))
         return render_template('invoice/list.html', invoices=invoices, count_invoice=len(invoices))
@@ -680,6 +682,14 @@ class Funds:
             print(str(e))
 
         return render_template('funds/spent.html')
+
+    def filter(self):
+        try:
+            pass
+        except Exception as e:
+            print(str(e))
+
+        return render_template('funds/list.html')
 
 
 class Logs:

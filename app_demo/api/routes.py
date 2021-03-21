@@ -129,3 +129,8 @@ def collect():
 @bp_funds.route('/spent', methods=('GET','POST'))
 def spent():
     return Funds().spent()
+
+
+@bp_funds.route('/filter', methods=('GET','POST'))
+def funds_filter():
+    return Funds().filter()

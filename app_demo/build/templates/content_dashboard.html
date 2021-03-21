@@ -60,12 +60,12 @@
               <div class="inner">
                 <h3>44</h3>
 
-                <p>User Registrations</p>
+                <p>Tổng thu</p>
               </div>
               <div class="icon">
                 <i class="ion ion-person-add"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ url_for('funds.funds_filter') }}" class="small-box-footer">Chi tiết... <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -75,12 +75,12 @@
               <div class="inner">
                 <h3>65</h3>
 
-                <p>Unique Visitors</p>
+                <p>Tổng chi</p>
               </div>
               <div class="icon">
                 <i class="ion ion-pie-graph"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{{ url_for('funds.funds_filter') }}" class="small-box-footer">Chi tiết... <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -114,7 +114,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for invoice in g.invoices %}
+                {% for invoice in invoices %}
                 <tr>
                   <td>{{ invoice['invoice_id'] }}</td>
                   <td>{{ invoice['customer']['name'] }}</td>
@@ -124,7 +124,7 @@
 	                <td>{{ invoice['from_date'] }}</td>
                   <td>{{ invoice['to_date'] }}</td>
                   <td>{{ invoice['price_rate'] }}</td>
-	                <td>{{ invoice['status'] }}</td>
+	                <td>{{ invoice['status_invoice_msg'] }}</td>
                 </tr>
                 {%  endfor %}
 
