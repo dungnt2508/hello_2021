@@ -39,6 +39,7 @@
 	                <th>Đến ngày</th>
 	                <th>Lãi phí </th>
 	                <th>Trạng thái</th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,6 +54,12 @@
                   <td>{{ invoice['to_date'] }}</td>
                   <td>{{ invoice['price_rate'] }}</td>
 	                <td>{{ invoice['status_invoice_msg'] }}</td>
+                     <td class="text-center"><i class="fa fa-pencil-square-o edit-item" title="Sửa"
+                                                                   onclick="cms_edit_usitem()"
+                                                                   style="margin-right: 10px; cursor: pointer;"></i><i
+                                                onclick="cms_del_usitem()" title="Xóa"
+                                                class="fa fa-trash-o delete-item" style="cursor: pointer;"></i></td>
+
                 </tr>
                 {%  endfor %}
 
@@ -68,6 +75,7 @@
 	                <th>Đến ngày</th>
 	                <th>Lãi phí</th>
 	                <th>Trạng thái</th>
+                  <th></th>
                 </tr>
                 </tfoot>
               </table>
