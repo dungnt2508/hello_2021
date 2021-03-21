@@ -27,7 +27,11 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table id="example1" class="table table-bordered table-striped">
+               <div id="toolbar">
+              </div>
+              <table id="example1" data-show-export="true" class="table table-bordered table-striped" data-side-pagination="client"
+              data-show-export="true"
+              data-export-types="['excel', 'pdf']">
                 <thead>
                 <tr>
                   <th>Mã HĐ</th>
@@ -39,7 +43,7 @@
 	                <th>Đến ngày</th>
 	                <th>Lãi phí </th>
 	                <th>Trạng thái</th>
-                  <th></th>
+                  <th>Xử lý</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -54,11 +58,15 @@
                   <td>{{ invoice['to_date'] }}</td>
                   <td>{{ invoice['price_rate'] }}</td>
 	                <td>{{ invoice['status_invoice_msg'] }}</td>
-                     <td class="text-center"><i class="fa fa-pencil-square-o edit-item" title="Sửa"
+                     <td class="text-center"><i class="ion-ios-time-outline" title="gia hạn"
                                                                    onclick="cms_edit_usitem()"
-                                                                   style="margin-right: 10px; cursor: pointer;"></i><i
-                                                onclick="cms_del_usitem()" title="Xóa"
-                                                class="fa fa-trash-o delete-item" style="cursor: pointer;"></i></td>
+                                                                   style="margin-right: 10px; cursor: pointer;"></i>
+                                              <i
+                                                onclick="cms_del_usitem()" title="tất toán"
+                                                class="ion-android-done-all" style="cursor: pointer;"></i>
+                                              <i
+                                                onclick="cms_del_usitem()" title="thanh lý"
+                                                class="ion-ios-cart" style="cursor: pointer;"></i></td>
 
                 </tr>
                 {%  endfor %}
@@ -75,7 +83,7 @@
 	                <th>Đến ngày</th>
 	                <th>Lãi phí</th>
 	                <th>Trạng thái</th>
-                  <th></th>
+                  <th>Xử lý</th>
                 </tr>
                 </tfoot>
               </table>

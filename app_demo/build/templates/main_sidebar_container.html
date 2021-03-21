@@ -40,7 +40,7 @@
 		  <!--USERS-->
 		   <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
+              <i class="nav-icon fas fa-user"></i>
               <p>
                 Quản Lý Nhân Sự
                 <i class="fas fa-angle-left right"></i>
@@ -50,7 +50,7 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('user.filter') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="far fa-list-alt nav-icon"></i>
                   <p>Danh sách nhân viên</p>
                 </a>
               </li>
@@ -58,7 +58,7 @@
 			   <ul class="nav nav-treeview">
 	          <li class="nav-item">
 	            <a href="{{ url_for('user.create', type = 1) }}" class="nav-link">
-	              <i class="far fa-circle nav-icon"></i>
+	              <i class="fas fa-user-plus nav-icon"></i>
 	              <p>Thêm mới nhân viên</p>
 	            </a>
 	          </li>
@@ -68,7 +68,7 @@
 		  <!--Customers-->
 		   <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
+              <i class="nav-icon fas fa-users"></i>
               <p>
                 Quản lý khách hàng
                 <i class="fas fa-angle-left right"></i>
@@ -78,7 +78,7 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('customer.customer_filter') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="far fa-list-alt nav-icon"></i>
                   <p>Danh sách khách hàng</p>
                 </a>
               </li>
@@ -87,7 +87,7 @@
 	         <!--Invoice-->
 		   <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
+              <i class="nav-icon fas fa-file-contract"></i>
               <p>
                 Quản lý hợp đồng
                 <i class="fas fa-angle-left right"></i>
@@ -97,7 +97,7 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('invoice.invoice_filter') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="far fa-list-alt nav-icon"></i>
                   <p>Danh sách hợp đồng</p>
                 </a>
               </li>
@@ -105,7 +105,7 @@
 			   <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('invoice.invoice_create') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="fas fa-file-signature nav-icon"></i>
                   <p>Lập hợp đồng</p>
                 </a>
               </li>
@@ -113,7 +113,7 @@
 			   <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('invoice.invoice_pay') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="fas fa-calculator nav-icon"></i>
                   <p>Thanh toán lãi</p>
                 </a>
               </li>
@@ -121,7 +121,7 @@
 			   <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('invoice.invoice_redeem') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="fas fa-file-invoice-dollar nav-icon"></i>
                   <p>Tất toán</p>
                 </a>
               </li>
@@ -131,7 +131,7 @@
 
 	        <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
+              <i class="nav-icon fas fa-tasks"></i>
               <p>
                 Quản lý quỹ
                 <i class="fas fa-angle-left right"></i>
@@ -141,7 +141,7 @@
 		        <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('funds.funds_filter') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="ion-ios-paper-outline nav-icon"></i>
                   <p>Báo cáo thu chi</p>
                 </a>
               </li>
@@ -149,7 +149,7 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('funds.collect') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="ion-arrow-graph-up-right nav-icon"></i>
                   <p>Thu</p>
                 </a>
               </li>
@@ -157,7 +157,7 @@
 			<ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('funds.spent') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="ion-arrow-graph-down-right nav-icon"></i>
                   <p>Chi</p>
                 </a>
               </li>
@@ -166,7 +166,7 @@
 		  <!--Setting-->
 		  <li class="nav-item has-treeview">
             <a href="" class="nav-link">
-              <i class="nav-icon fas fa-copy"></i>
+              <i class="nav-icon fas fa-cog"></i>
               <p>
                 Thiết lập
                 <i class="fas fa-angle-left right"></i>
@@ -176,7 +176,7 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('setting.set_rule') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="ion-android-hand nav-icon"></i>
                   <p>Phân quyền</p>
                 </a>
               </li>
@@ -184,7 +184,7 @@
 			<ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('setting.set_rate') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="ion-ios-color-wand nav-icon"></i>
                   <p>Công thức lãi</p>
                 </a>
               </li>
@@ -192,7 +192,7 @@
 			  <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('user.logout') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="ion-ios-undo-outline nav-icon"></i>
                   <p>Đăng xuất</p>
                 </a>
               </li>
