@@ -60,3 +60,7 @@ pipeline_filter = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 
 
 pipeline_filter = pipeline_filter%(today,today,today,2)
 print(pipeline_filter)
+
+
+a = "{:,.0f}".format(float(10000))
+print(a)

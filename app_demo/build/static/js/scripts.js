@@ -136,8 +136,8 @@ $("#pawn_item_kind").on("change",function(e){
             data: kind_item,
             dataType: "json",
             success: function(resp){
-                console.log(kind_item)
-                console.log(resp)
+                //console.log(kind_item)
+                //console.log(resp)
                 $("#pawn_rate").val(resp/4);
                 $("#pawn_kind_item").val(kind_item);
 
@@ -161,7 +161,8 @@ $("#pawn_to_date").on("change",function(e){
             return
         }
 
-        var price = $("#pawn_price").val()
+        var price = $("#pawn_price").val().replaceAll(',', '')
+        console.log(price)
         if(price.length == 0){
             alert("Bạn cần nhập số tiền vay để hệ thống tính lãi !")
             $("#pawn_to_date").val("");
@@ -193,7 +194,7 @@ $("#pawn_to_date").on("change",function(e){
         if(days > 0 ){
             var week = 1
             var check_day = days % 7
-            console.log(check_day)
+            //console.log(check_day)
 
             if(check_day == 0){
                 week = Math.floor(days/7)
@@ -201,10 +202,8 @@ $("#pawn_to_date").on("change",function(e){
             else{
                 week = Math.floor(days/7) + 1
             }
-
-            var rate = $("#pawn_rate").val();
+            var rate = $("#pawn_rate").val()
             var rate_pawn = price * (week * rate/100)
-
             $("#pawn_week").val(week);
             $("#pawn_price_rate").val(rate_pawn);
         }

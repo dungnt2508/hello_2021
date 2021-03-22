@@ -50,7 +50,7 @@ class User:
                 # get quĩ
                 g.treasure = 0
                 if db.funds.find_one():
-                    g.treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))[0]["funds"]
+                    g.treasure = "${:,.0f}".format(float(list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))[0]["funds"]))
                 # print(g.settings)
                 g.logs = list(db.logs.find({},{"_id": 0}))
                 # print(g.logs)
@@ -200,14 +200,19 @@ class User:
             show dashboard
         :return:
         """
-        count_exprired = 0
+        count_expired = 0
         count_over_expired = 0
+        invoices = []
         try:
             today = str(date.today())
 
             count_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '1')))))
             count_over_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '2')))))
             invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_all % (today, today, today))))
+            # invoices['price_pawn'] = ["{:,}".format(float(invoice['price_pawn'])) for invoice in invoices]
+            for i in invoices:
+                i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
+                i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
 
         except Exception as e:
             print(str(e))
@@ -345,13 +350,16 @@ class Invoice:
                 if price is None or len(price) == 0:
                     error = 'Chưa nhập số tiền vay'
                     return jsonify({"error": error}), 400
+                if int(price.replace(',', '')) % 10000 != 0:
+                    error = 'Số tiền vay phải chia hết cho 10.000'
+                    return jsonify({"error": error}), 400
                 if from_date is None or len(from_date) == 0:
                     error = 'Chưa nhập ngày vay'
                     return jsonify({"error": error}), 400
                 if to_date is None or len(to_date) == 0:
                     error = 'Chưa nhập ngày đến hạn '
                     return jsonify({"error": error}), 400
-                if int(price) >= funds:
+                if int(price.replace(',', '')) >= funds:
                     error = 'Quỹ không đủ chi. Cần bổ sung'
                     return jsonify({"error": error}), 400
 
@@ -391,7 +399,7 @@ class Invoice:
                     "item_kind": item_kind,
                     "item_name": item_name,
                     "customer": customer,
-                    "price_pawn": int(price),
+                    "price_pawn": int(price.replace(',', '')),
                     "rate": request.form.get("pawn_rate"),
                     "price_rate": int(request.form.get("pawn_price_rate")),
                     "days": days,
@@ -408,7 +416,7 @@ class Invoice:
                     Logs().insert_log(3, {"invoice_id": invoice_id, "status": 1, "price": (price)})  # insert log
 
                     funds_spent = {
-                        "funds": str(funds - int(price)),
+                        "funds": str(funds - int(price.replace(',', ''))),
                         "spent": {
                             "_id": uuid.uuid4().hex,
                             "price": str(price),
@@ -456,11 +464,11 @@ class Invoice:
 
                 # tính lại hợp đồng
                 # tiền vay = tiền đã vay - tiền trả trước (nếu có)
-                price_pawn = int(request.form.get("pay_price")) - int(pay_price_)
+                price_pawn = int(request.form.get("pay_price").replace(',', '')) - int(str(pay_price_).replace(',', ''))
                 # tiền lãi = (tiền lãi đã tính / tuần ) * tuần vay mới
-                price_rate = int(request.form.get("pay_price_rate"))/int(request.form.get("pay_week"))*int(pay_week_)
+                price_rate = int(request.form.get("pay_price_rate").replace(',', ''))/int(request.form.get("pay_week"))*int(pay_week_)
                 # khoản thu thực tế
-                price_collect = int(pay_price_) + int(request.form.get("pay_price_rate"))
+                price_collect = int(str(pay_price_).replace(',', '')) + int(request.form.get("pay_price_rate").replace(',', ''))
 
                 # update hợp đồng + insert khoản thu
                 funds = 0
@@ -476,7 +484,7 @@ class Invoice:
                                                             "days": (int(pay_week_)*7),
                                                             "status": 2
                                                             }}):
-                    Logs().insert_log(3, {"invoice_id": pay_id, "status": 2, "price": str(funds + price_collect)})
+                    Logs().insert_log(3, {"invoice_id": pay_id, "status": 2, "price": str(funds + price_collect).replace(',', '')})
                     treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))
                     if treasure:
                         funds = int(treasure[0]["funds"])
@@ -515,14 +523,14 @@ class Invoice:
                 # create treasure object
                 redeem_id = request.form.get("redeem_id")
 
-                redeem_price = int(request.form.get("redeem_price"))  # tiền gốc / số tiền vay
+                redeem_price = int(request.form.get("redeem_price").replace(',', ''))  # tiền gốc / số tiền vay
 
-                redeem_price_rate = int(request.form.get("redeem_price_rate")) # tiền lãi
+                redeem_price_rate = int(request.form.get("redeem_price_rate").replace(',', '')) # tiền lãi
 
                 # update hợp đồng + insert khoản thu
                 funds = 0
                 if db.invoice.update_one({"invoice_id": redeem_id},{"$set": {"status": 0}}):
-                    Logs().insert_log(3, {"invoice_id": redeem_id, "status": 0, "price": str(redeem_price + redeem_price_rate)})
+                    Logs().insert_log(3, {"invoice_id": redeem_id, "status": 0, "price": str(redeem_price + redeem_price_rate).replace(',', '')})
                     treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))
                     if treasure:
                         funds = int(treasure[0]["funds"])
@@ -549,6 +557,9 @@ class Invoice:
     def filter(self):
         try:
             invoices = list(db.invoice.find({}, {'_id': 0}))
+            for i in invoices:
+                i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
+                i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
             # print(invoices)
         except Exception as e:
             print(str(e))
@@ -564,6 +575,9 @@ class Invoice:
 
             today = str(date.today())
             invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '1'))))
+            for i in invoices:
+                i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
+                i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
         except Exception as e:
             print(str(e))
         return render_template('invoice/list.html', invoices=invoices, count_invoice=len(invoices))
@@ -577,6 +591,9 @@ class Invoice:
         try:
             today = str(date.today())
             invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '2'))))
+            for i in invoices:
+                i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
+                i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
         except Exception as e:
             print(str(e))
         return render_template('invoice/list.html', invoices=invoices, count_invoice=len(invoices))
@@ -584,6 +601,8 @@ class Invoice:
     def filter_one(self,id):
         try:
             invoices = db.invoice.find_one({"invoice_id": id}, {'_id': 0})
+            invoices['price_pawn'] = "{:,.0f}".format(float(invoices['price_pawn']))
+            invoices['price_rate'] = "{:,.0f}".format(float(invoices['price_rate']))
         except Exception as e:
             print(str(e))
         return jsonify(invoices), 200
@@ -619,7 +638,14 @@ class Funds:
     def collect(self):
         try:
             if request.method == "POST":
-                price = int(request.form.get("price"))
+                price = request.form.get("price")
+                if price is None or len(price) == 0:
+                    error = 'Số tiền chưa nhập'
+                    return jsonify({"error": error}), 400
+                price = int(price.replace(',', ''))
+                if price % 10000 !=0:
+                    error = 'Số tiền phải chia hết cho 10.000'
+                    return jsonify({"error": error}), 400
                 source = request.form.get("source")
                 user_created = request.form.get("user_created")
                 note = request.form.get("note")
@@ -651,9 +677,17 @@ class Funds:
         return render_template('funds/collect.html')
 
     def spent(self):
+        error = None
         try:
             if request.method == "POST":
-                price = int(request.form.get("price"))
+                price = request.form.get("price")
+                if price is None or len(price) == 0:
+                    error = 'Số tiền chưa nhập'
+                    return jsonify({"error": error}), 400
+                price = int(price.replace(',', ''))
+                if price % 10000 !=0:
+                    error = 'Số tiền phải chia hết cho 10.000'
+                    return jsonify({"error": error}), 400
                 source = request.form.get("source")
                 user_created = request.form.get("user_created")
                 note = request.form.get("note")
@@ -705,8 +739,6 @@ class Logs:
         :return:
         """
         try:
-            print(dict)
-            print(type)
 
             log_dict = {
                 "user_created": g.user["user_name"],

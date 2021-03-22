@@ -34,7 +34,7 @@
                 <div class="card-body">
 	                 <div class="form-group">
                     <label for="price">Số tiền</label>
-                    <input type="number" name="price" class="form-control" id="price" placeholder="Nhập số tiền">
+                     <input type="text" name="price" id="price" class="form-control"  pattern="^\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" placeholder="Nhập số tiền">
                   </div>
 	                 <div class="form-group">
                     <label for="source">Nguồn chi</label>
