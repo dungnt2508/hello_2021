@@ -423,9 +423,9 @@ class Invoice:
                             "source": invoice_pawn,
                             "user_created": g.user["user_name"],
                             "note": request.form.get("pawn_note"),
-                            "type": 2,
-                            "status": 1
-                        }
+                            "type": 2
+                        },
+                        "status": 2
 
                     }
                     db.funds.insert_one(funds_spent)
@@ -497,9 +497,8 @@ class Invoice:
                             "user_created": g.user["user_name"],
                             "note": request.form.get("pay_note"),
                             "type": 2,  # 2. khoản thu từ lãi của hợp đồng
-                            "status": 1
-                        }
-
+                        },
+                        "status": 1
                     }
                     db.funds.insert_one(funds_collect)
 
@@ -543,8 +542,8 @@ class Invoice:
                             "user_created": g.user["user_name"],
                             "note": request.form.get("redeem_note"),
                             "type": 3,  # 3. khoản thu từ tất toán hợp đồng
-                            "status": 1
-                        }
+                        },
+                        "status": 1
 
                     }
                     db.funds.insert_one(funds_collect)
@@ -636,6 +635,11 @@ class Settings:
 
 class Funds:
     def collect(self):
+        """
+            nạp vào
+            funds.status = 1
+        :return:
+        """
         try:
             if request.method == "POST":
                 price = request.form.get("price")
@@ -646,7 +650,7 @@ class Funds:
                 if price % 10000 !=0:
                     error = 'Số tiền phải chia hết cho 10.000'
                     return jsonify({"error": error}), 400
-                source = request.form.get("source")
+                source = {"invoice_id": "","source": request.form.get("source")}
                 user_created = request.form.get("user_created")
                 note = request.form.get("note")
                 funds = 0
@@ -663,9 +667,9 @@ class Funds:
                         "user_created": g.user["user_name"],
                         "date_created": dt.datetime.now(),
                         "note": note,
-                        "type": 1,
-                        "status": 1
-                    }
+                        "type": 1
+                    },
+                    "status": 1
 
                 }
                 db.funds.insert_one(funds_collect)
@@ -677,6 +681,11 @@ class Funds:
         return render_template('funds/collect.html')
 
     def spent(self):
+        """
+                    chi ra
+                    funds.status = 2
+                :return:
+                """
         error = None
         try:
             if request.method == "POST":
@@ -688,7 +697,7 @@ class Funds:
                 if price % 10000 !=0:
                     error = 'Số tiền phải chia hết cho 10.000'
                     return jsonify({"error": error}), 400
-                source = request.form.get("source")
+                source = {"invoice_id": "","source": request.form.get("source")}
                 user_created = request.form.get("user_created")
                 note = request.form.get("note")
 
@@ -704,10 +713,9 @@ class Funds:
                         "user_created": g.user["user_name"],
                         "date_created": dt.datetime.now(),
                         "note": note,
-                        "type": 1,
-                        "status": 1
-                    }
-
+                        "type": 1
+                    },
+                    "status": 2
                 }
                 db.funds.insert_one(funds_spent)
                 Logs().insert_log(6, funds_spent)
@@ -751,19 +759,19 @@ class Logs:
                 log_dict["log"] = dict["name"] + " là khách hàng mới "
             if type == 3:   # log invoice
                 if dict["status"] == 1: # hợp đồng mới
-                    log_dict["log"] = "Chi " + dict["price"] + " - Note : lập hợp đồng " + dict["invoice_id"]
+                    log_dict["log"] = "Chi " + "{:,.0f}".format(float(dict["price"])) + " - Note : lập hợp đồng " + dict["invoice_id"]
                 if dict["status"] == 2: # hợp đồng trả lãi
-                    log_dict["log"] = "Thu " + dict["price"] + " - Note :  thu lãi hợp đồng " + dict["invoice_id"]
+                    log_dict["log"] = "Thu " + "{:,.0f}".format(float(dict["price"])) + " - Note :  thu lãi hợp đồng " + dict["invoice_id"]
                 if dict["status"] == 0: # hợp đồng tất toán
-                    log_dict["log"] = "Thu " + dict["price"] + " - Note :  tất toán hợp đồng " + dict["invoice_id"]
+                    log_dict["log"] = "Thu " + "{:,.0f}".format(float(dict["price"])) + " - Note :  tất toán hợp đồng " + dict["invoice_id"]
             if type == 4:   # log settings
                 log_dict["log"] = " thiết lập lại lãi suất"
             if type == 5:   # log funds.collect
                 if dict["collect"]:
-                    log_dict["log"] = " Nạp vào " + dict["collect"]["price"] + " - Note : " + dict["collect"]["note"]
+                    log_dict["log"] = dict["collect"]["source"]['source'] + " Nạp vào " + "{:,.0f}".format(float(dict["collect"]["price"])) + " - Note : " + dict["collect"]["note"]
             if type == 6:   # log funds.spent
                 if dict["spent"]:
-                    log_dict["log"] = " Chi ra " + dict["spent"]["price"] + " - Note : " + dict["spent"]["note"]
+                    log_dict["log"] = dict['spent']["source"]["source"] + " Chi ra " + "{:,.0f}".format(float(dict["spent"]["price"])) + " - Note : " + dict["spent"]["note"]
 
             db.logs.insert_one(log_dict)
         except Exception as e:
