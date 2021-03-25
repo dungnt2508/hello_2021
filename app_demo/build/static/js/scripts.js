@@ -507,3 +507,48 @@ function formatCurrency(input, blur) {
   input[0].setSelectionRange(caret_pos, caret_pos);
 }
 //------Format Numner
+
+
+
+//$('#sample_data').editable({
+//	        container:'body',
+//	        selector:'td.item_name',
+//	        url:'/settings/set_rate',
+//	        title:'Name',
+//	        type:'POST',
+//	        validate:function(value){
+//	            if($.trim(value) == '')
+//	            {
+//	                return 'This field is required';
+//	            }
+//	        }
+//	    });
+
+//	    $('#sample_data').editable({
+//	        container:'body',
+//	        selector:'td.item_name',
+//	        url:'/settings/set_rate',
+//	        title:'Email',
+//	        type:'POST',
+//	        validate:function(value){
+//	            if($.trim(value) == '')
+//	            {
+//	                return 'This field is required';
+//	            }
+//	        }
+//	    });
+//
+//	    $('#sample_data').editable({
+//	        container:'body',
+//	        selector:'td.item_name',
+//	        url:'/settings/set_rate',
+//	        title:'Phone',
+//	        type:'POST',
+//	        validate:function(value){
+//	            if($.trim(value) == '')
+//	            {
+//	                return 'This field is required';
+//	            }
+//	        }
+//	    });
+

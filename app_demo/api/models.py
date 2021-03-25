@@ -55,8 +55,8 @@ class User:
                 g.logs = list(db.logs.find({},{"_id": 0}))
                 # print(g.logs)
                 # setting filter
-                g.pipeline_filter_status = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': '-1' } } } },{ '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'-1' } } } }, { '$match': { 'status_invoice': '%s' } } ]"
-                g.pipeline_filter_all = "[ { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':{ '$switch':{ 'branches':[ { 'case':{ '$and':[ { '$gt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'0' }, { 'case':{ '$and':[ { '$eq':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'1' }, { 'case':{ '$and':[ { '$lt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'2' } ], 'default':'-1' } } } }, { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'-1' } } } } ]"
+                g.pipeline_filter_status = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': '-1' } } } },{ '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } }, { '$match': { 'status_invoice': '%s' } } ]"
+                g.pipeline_filter_all = "[ { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':{ '$switch':{ 'branches':[ { 'case':{ '$and':[ { '$gt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'0' }, { 'case':{ '$and':[ { '$eq':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'1' }, { 'case':{ '$and':[ { '$lt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'2' } ], 'default':'-1' } } } }, { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } } ]"
 
         except Exception as e:
             print(str(e))
@@ -413,15 +413,16 @@ class Invoice:
                 }
 
                 if db.invoice.insert_one(invoice_pawn):
-                    Logs().insert_log(3, {"invoice_id": invoice_id, "status": 1, "price": (price)})  # insert log
+                    Logs().insert_log(3, {"invoice_id": invoice_id, "status": 1, "price": price})  # insert log
 
                     funds_spent = {
                         "funds": str(funds - int(price.replace(',', ''))),
                         "spent": {
                             "_id": uuid.uuid4().hex,
-                            "price": str(price),
+                            "price": str(price.replace(',', '')),
                             "source": invoice_pawn,
                             "user_created": g.user["user_name"],
+                            "date_created": dt.datetime.now(),
                             "note": request.form.get("pawn_note"),
                             "type": 2
                         },
@@ -495,6 +496,7 @@ class Invoice:
                             "price": str(price_collect),
                             "source": {"invoice_id":pay_id},
                             "user_created": g.user["user_name"],
+                            "date_created": dt.datetime.now(),
                             "note": request.form.get("pay_note"),
                             "type": 2,  # 2. khoản thu từ lãi của hợp đồng
                         },
@@ -540,6 +542,7 @@ class Invoice:
                             "price": str(redeem_price + redeem_price_rate),
                             "source": {"invoice_id": redeem_id},
                             "user_created": g.user["user_name"],
+                            "date_created": dt.datetime.now(),
                             "note": request.form.get("redeem_note"),
                             "type": 3,  # 3. khoản thu từ tất toán hợp đồng
                         },
@@ -627,10 +630,10 @@ class Settings:
 
     def set_rate(self):
         try:
-            pass
+            lst_rate = db.settings.find({"status": "1"}, {"_id": 0})
         except Exception as e:
             print(str(e))
-        return render_template('settings/set_rate.html')
+        return render_template('settings/set_rate.html', lst_rate=lst_rate)
 
 
 class Funds:
@@ -726,12 +729,123 @@ class Funds:
         return render_template('funds/spent.html')
 
     def filter(self):
+        lst_collect = []
+        price_collect = 0
+        lst_spent = []
+        price_spent = 0
         try:
-            pass
+            pipeline_collect = [
+                            {
+                                '$project': {
+                                    '_id': 0
+                                }
+                            }, {
+                                '$match': {
+                                    'status': 1
+                                }
+                            }, {
+                                '$project': {
+                                    '_id': 0,
+                                    'collect': 1,
+                                    'status': 1,
+                                    'invoice_id': '$collect.source.invoice_id',
+                                    'note': '$collect.note',
+                                    'date_created': '$collect.date_created',
+                                    'user_created': '$collect.user_created',
+                                    'price': '$collect.price',
+                                    'type': {
+                                        '$switch': {
+                                            'branches': [
+                                                {
+                                                    'case': {
+                                                        '$eq': [
+                                                            '$collect.type', 1
+                                                        ]
+                                                    },
+                                                    'then': 'Khác'
+                                                }, {
+                                                    'case': {
+                                                        '$eq': [
+                                                            '$collect.type', 2
+                                                        ]
+                                                    },
+                                                    'then': 'Gia hạn'
+                                                }, {
+                                                    'case': {
+                                                        '$eq': [
+                                                            '$collect.type', 3
+                                                        ]
+                                                    },
+                                                    'then': 'Tất toán'
+                                                }
+                                            ],
+                                            'default': '-1'
+                                        }
+                                    }
+                                }
+                            },
+                            {'$sort':{'_id':1}}
+                        ]
+
+            lst_collect = list(db.funds.aggregate(pipeline_collect))
+            for i in lst_collect:
+                price_collect += int(i["price"])
+
+            pipeline_spent = [
+                {
+                    '$project': {
+                        '_id': 0
+                    }
+                }, {
+                    '$match': {
+                        'status': 2
+                    }
+                }, {
+                    '$project': {
+                        '_id': 0,
+                        'spent': 1,
+                        'status': 1,
+                        'invoice_id': '$spent.source.invoice_id',
+                        'note': '$spent.note',
+                        'date_created': '$spent.date_created',
+                        'user_created': '$spent.user_created',
+                        'price': '$spent.price',
+                        'type': {
+                            '$switch': {
+                                'branches': [
+                                    {
+                                        'case': {
+                                            '$eq': [
+                                                '$spent.type', 1
+                                            ]
+                                        },
+                                        'then': 'Khác'
+                                    }, {
+                                        'case': {
+                                            '$eq': [
+                                                '$spent.type', 2
+                                            ]
+                                        },
+                                        'then': 'Lập hợp đồng'
+                                    }
+                                ],
+                                'default': '-1'
+                            }
+                        }
+                    }
+                },
+                {'$sort': {'_id': 1}}
+            ]
+
+            lst_spent = list(db.funds.aggregate(pipeline_spent))
+            for i in lst_spent:
+                price_spent += int(i["price"])
+            print(price_collect)
+            print(price_spent)
         except Exception as e:
             print(str(e))
 
-        return render_template('funds/list.html')
+        return render_template('funds/list.html', lst_collect=lst_collect, price_collect=price_collect, lst_spent=lst_spent, price_spent=price_spent)
 
 
 class Logs:
@@ -759,11 +873,11 @@ class Logs:
                 log_dict["log"] = dict["name"] + " là khách hàng mới "
             if type == 3:   # log invoice
                 if dict["status"] == 1: # hợp đồng mới
-                    log_dict["log"] = "Chi " + "{:,.0f}".format(float(dict["price"])) + " - Note : lập hợp đồng " + dict["invoice_id"]
+                    log_dict["log"] = "Chi " + dict["price"] + " - Note : lập hợp đồng " + dict["invoice_id"]
                 if dict["status"] == 2: # hợp đồng trả lãi
-                    log_dict["log"] = "Thu " + "{:,.0f}".format(float(dict["price"])) + " - Note :  thu lãi hợp đồng " + dict["invoice_id"]
+                    log_dict["log"] = "Thu " + dict["price"] + " - Note :  thu lãi hợp đồng " + dict["invoice_id"]
                 if dict["status"] == 0: # hợp đồng tất toán
-                    log_dict["log"] = "Thu " + "{:,.0f}".format(float(dict["price"])) + " - Note :  tất toán hợp đồng " + dict["invoice_id"]
+                    log_dict["log"] = "Thu " + dict["price"] + " - Note :  tất toán hợp đồng " + dict["invoice_id"]
             if type == 4:   # log settings
                 log_dict["log"] = " thiết lập lại lãi suất"
             if type == 5:   # log funds.collect

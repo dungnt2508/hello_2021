@@ -32,17 +32,19 @@
                 <tr>
                   <th>Nguồn thu</th>
 	                <th>Mã HĐ</th>
-                  <th>Người thu</th>
+                  <th>Người nhập</th>
+	                <th>Ngày nhập</th>
                   <th>Phí</th>
-                  <th>Note</th>
+                  <th>Ghi chú</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for fund in collect %}
+                {% for fund in lst_collect %}
                 <tr>
-                  <td>{{ fund['source'] }}</td>
+                  <td>{{ fund['type'] }}</td>
                   <td>{{ fund['invoice_id'] }}</td>
                   <td>{{ fund['user_created'] }}</td>
+	                <td>{{ fund['date_created'] }}</td>
                   <td>{{ fund['price'] }}</td>
                   <td>{{ fund['note'] }}</td>
                 </tr>
@@ -53,9 +55,10 @@
                 <tr>
                   <th>Nguồn thu</th>
 	                <th>Mã HĐ</th>
-                  <th>Người thu</th>
+                  <th>Người nhập</th>
+	                <th>Ngày nhập</th>
                   <th>Phí</th>
-                  <th>Note</th>
+                  <th>Ghi chú</th>
                 </tr>
                 </tfoot>
               </table>
@@ -75,17 +78,19 @@
                 <tr>
                   <th>Nguồn chi</th>
 	                <th>Mã HĐ</th>
-                  <th>Người chi</th>
+                  <th>Người nhập</th>
+	                <th>Ngày chi</th>
                   <th>Phí</th>
-                  <th>Note</th>
+                  <th>Ghi chú</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for fund in spent %}
+                {% for fund in lst_spent %}
                 <tr>
-                  <td>{{ fund['source'] }}</td>
+                  <td>{{ fund['type'] }}</td>
                   <td>{{ fund['invoice_id'] }}</td>
                   <td>{{ fund['user_created'] }}</td>
+	                <td>{{ fund['date_created'] }}</td>
                   <td>{{ fund['price'] }}</td>
                   <td>{{ fund['note'] }}</td>
                 </tr>
@@ -96,9 +101,10 @@
                 <tr>
                   <th>Nguồn chi</th>
 	                <th>Mã HĐ</th>
-                  <th>Người chi</th>
+                  <th>Người nhập</th>
+	                <th>Ngày chi</th>
                   <th>Phí</th>
-                  <th>Note</th>
+                  <th>Ghi chú</th>
                 </tr>
                 </tfoot>
               </table>
