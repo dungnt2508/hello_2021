@@ -170,25 +170,34 @@
               <p>
                 Thiết lập
                 <i class="fas fa-angle-left right"></i>
-                <span class="badge badge-info right">3</span>
+                <span class="badge badge-info right">2</span>
               </p>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ url_for('setting.set_rule') }}" class="nav-link">
-                  <i class="ion-android-hand nav-icon"></i>
-                  <p>Phân quyền</p>
-                </a>
-              </li>
-            </ul>
+<!--            <ul class="nav nav-treeview">-->
+<!--              <li class="nav-item">-->
+<!--                <a href="{{ url_for('setting.set_rule') }}" class="nav-link">-->
+<!--                  <i class="ion-android-hand nav-icon"></i>-->
+<!--                  <p>Phân quyền</p>-->
+<!--                </a>-->
+<!--              </li>-->
+<!--            </ul>-->
 			<ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ url_for('setting.set_rate') }}" class="nav-link">
+                <a href="{{ url_for('setting.filter_rate') }}" class="nav-link">
                   <i class="ion-ios-color-wand nav-icon"></i>
                   <p>Công thức lãi</p>
                 </a>
               </li>
             </ul>
+			  <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{{ url_for('setting.update_rate') }}" class="nav-link">
+                  <i class="ion-ios-color-wand nav-icon"></i>
+                  <p>Cập nhật lãi</p>
+                </a>
+              </li>
+            </ul>
+
 			  <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url_for('user.logout') }}" class="nav-link">

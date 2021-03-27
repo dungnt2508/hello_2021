@@ -29,7 +29,7 @@
             <div class="card-body">
                <div id="toolbar">
               </div>
-              <table id="example1" data-show-export="true" class="table table-bordered table-striped" data-side-pagination="client"
+              <table id="example3" data-show-export="true" class="table table-bordered table-striped" data-side-pagination="client"
               data-show-export="true"
               data-export-types="['excel', 'pdf']">
                 <thead>
@@ -43,13 +43,13 @@
 	                <th>Đến ngày</th>
 	                <th>Lãi phí </th>
 	                <th>Trạng thái</th>
-                  <th>Xử lý</th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for invoice in invoices %}
                 <tr>
-                  <td>{{ invoice['invoice_id'] }}</td>
+                  <td><a href="#">{{ invoice['invoice_id'] }}</a></td>
                   <td>{{ invoice['customer']['name'] }}</td>
                   <td>{{ invoice['customer']['phone'] }}</td>
                   <td>{{ invoice['item_name'] }}</td>
@@ -58,16 +58,12 @@
                   <td>{{ invoice['to_date'] }}</td>
                   <td>{{ invoice['price_rate'] }}</td>
 	                <td>{{ invoice['status_invoice_msg'] }}</td>
-                     <td class="text-center"><i class="ion-ios-time-outline" title="gia hạn"
-                                                                   onclick="cms_edit_usitem()"
-                                                                   style="margin-right: 10px; cursor: pointer;"></i>
-                                              <i
-                                                onclick="cms_del_usitem()" title="tất toán"
-                                                class="ion-android-done-all" style="cursor: pointer;"></i>
-                                              <i
-                                                onclick="cms_del_usitem()" title="thanh lý"
-                                                class="ion-ios-cart" style="cursor: pointer;"></i></td>
-
+	                <td class="text-center">
+	                {%  if invoice['status'] !=0 %}
+                        <button type="button" class="btn btn-primary" onclick="cms_pay(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-play" title="gia hạn" style="margin-right: 10px; cursor: pointer;"></i> Gia hạn</button>
+		                <button type="button" class="btn btn-primary" onclick="cms_redeem(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-play" title="Tất toán" style="margin-right: 10px; cursor: pointer;"></i> Tất toán</button>
+	                {% endif %}
+	                </td>
                 </tr>
                 {%  endfor %}
 
@@ -83,7 +79,7 @@
 	                <th>Đến ngày</th>
 	                <th>Lãi phí</th>
 	                <th>Trạng thái</th>
-                  <th>Xử lý</th>
+                  <th></th>
                 </tr>
                 </tfoot>
               </table>

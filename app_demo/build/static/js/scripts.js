@@ -1,3 +1,4 @@
+//F đăng ký
 $("form[name=register_form]").submit(function(e){
 
     var $form = $(this);
@@ -23,6 +24,7 @@ $("form[name=register_form]").submit(function(e){
 });
 
 
+// F đăng ký nhân viên
 $("form[name=register_form_nv]").submit(function(e){
 
     var $form = $(this);
@@ -47,6 +49,8 @@ $("form[name=register_form_nv]").submit(function(e){
     e.preventDefault();
 });
 
+
+// F đăng ký khách hàng
 $("form[name=register_form_customer]").submit(function(e){
 
     var $form = $(this);
@@ -71,6 +75,8 @@ $("form[name=register_form_customer]").submit(function(e){
     e.preventDefault();
 });
 
+
+// F đăng nhập
 $("form[name=login_form]").submit(function(e){
 
     var $form = $(this);
@@ -96,6 +102,8 @@ $("form[name=login_form]").submit(function(e){
 })
 
 
+
+// F vay
 $("form[name=invoice_pawn]").submit(function(e){
 
     var $form = $(this);
@@ -131,7 +139,7 @@ $("#pawn_item_kind").on("change",function(e){
         var kind_item = $.parseJSON(this.value);
 
         $.ajax({
-            url: "/setting/get_rate/"+kind_item.toString(),
+            url: "/setting/get_rate_kind_item/"+kind_item.toString(),
             type: "GET",
             data: kind_item,
             dataType: "json",
@@ -287,7 +295,6 @@ $("form[name=invoice_pay]").submit(function(e){
     var $form = $(this);
     var $error = $form.find(".error");
     var data = $form.serialize();
-    console.log(data)
 
     $.ajax({
         url: "/invoice/pay",
@@ -309,6 +316,7 @@ $("form[name=invoice_pay]").submit(function(e){
 
 
 $("#pay_id").on("input",function(e){
+
         $("#pay_name").val("");
         $("#pay_phone").val("");
         $("#pay_email").val("");
@@ -354,6 +362,7 @@ $("#pay_id").on("input",function(e){
     });
 
 $("#redeem_id").on("input",function(e){
+        console.log("redeem_id",e);
         $("#redeem_name").val("");
         $("#redeem_phone").val("");
         $("#redeem_email").val("");
@@ -398,6 +407,36 @@ $("#redeem_id").on("input",function(e){
         }
     });
 
+$("#upd_kind_item").on("input",function(e){
+
+        $("#upd_item_name").val("");
+        $("#upd_rate").val("");
+        $("#upd_service_charge").val("");
+        $("#upd_storage_charge").val("");
+
+        var upd_kind_item = $(this).val().replace(" ","")
+
+        if(upd_kind_item.length > 0){
+            $.ajax({
+                url: "/setting/set_rate/"+upd_kind_item,
+                type: "GET",
+                dataType: "json",
+                success: function(resp){
+                    console.log(resp)
+                    $("#upd_item_name").val(resp.item_name);
+                    $("#upd_rate").val(resp.rate);
+                    $("#upd_service_charge").val(resp.service_charge);
+                    $("#upd_storage_charge").val(resp.storage_charge);
+                    console.log(resp)
+                },
+                error: function(resp){
+                    console.log(resp)
+
+                }
+            })
+        }
+    });
+
 $("form[name=invoice_redeem]").submit(function(e){
 
     var $form = $(this);
@@ -413,6 +452,30 @@ $("form[name=invoice_redeem]").submit(function(e){
         success: function(resp){
             console.log(resp)
             window.location.href = "/page/dashboard";
+        },
+        error: function(resp){
+            console.log(resp)
+            $error.html(resp.responseJSON.error).removeClass("error--hidden");
+        }
+    })
+
+    e.preventDefault();
+})
+
+$("form[name=update_rate]").submit(function(e){
+
+    var $form = $(this);
+    var $error = $form.find(".error");
+    var data = $form.serialize();
+
+    $.ajax({
+        url: "/setting/update_rate/",
+        type: "POST",
+        data: data,
+        dataType: "json",
+        success: function(resp){
+            console.log(resp)
+            window.location.href = "/setting/filter_rate";
         },
         error: function(resp){
             console.log(resp)
@@ -506,49 +569,84 @@ function formatCurrency(input, blur) {
   caret_pos = updated_len - original_len + caret_pos;
   input[0].setSelectionRange(caret_pos, caret_pos);
 }
+
+
+
 //------Format Numner
 
+function cms_pay(invoice_id) {
+//    alert(invoice_id)
+    window.location.href = "/invoice/pay/"+invoice_id
+}
+
+function cms_redeem(invoice_id) {
+//    alert(invoice_id)
+    window.location.href = "/invoice/redeem/"+invoice_id;
+}
 
 
-//$('#sample_data').editable({
-//	        container:'body',
-//	        selector:'td.item_name',
-//	        url:'/settings/set_rate',
-//	        title:'Name',
-//	        type:'POST',
-//	        validate:function(value){
-//	            if($.trim(value) == '')
-//	            {
-//	                return 'This field is required';
-//	            }
-//	        }
-//	    });
 
-//	    $('#sample_data').editable({
-//	        container:'body',
-//	        selector:'td.item_name',
-//	        url:'/settings/set_rate',
-//	        title:'Email',
-//	        type:'POST',
-//	        validate:function(value){
-//	            if($.trim(value) == '')
-//	            {
-//	                return 'This field is required';
-//	            }
-//	        }
-//	    });
-//
-//	    $('#sample_data').editable({
-//	        container:'body',
-//	        selector:'td.item_name',
-//	        url:'/settings/set_rate',
-//	        title:'Phone',
-//	        type:'POST',
-//	        validate:function(value){
-//	            if($.trim(value) == '')
-//	            {
-//	                return 'This field is required';
-//	            }
-//	        }
-//	    });
+$( document ).ready(function() {
+    var url = window.location.pathname;
+    var id = url.substring(url.lastIndexOf('/') + 1);
+    url_pay = "/invoice/pay/"+id
+    url_redeem = "/invoice/redeem/"+id
+//    url_rate = "/setting/set_rate/"+id
+    console.log(url)
+    console.log(id)
+    if(url == url_pay){
+        $("#pay_id").val(id);
+        $.ajax({
+                    url: "/invoice/filter_one/"+id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(resp){
+                        $("#pay_name").val(resp.customer.name);
+                        $("#pay_phone").val(resp.customer.phone);
+                        $("#pay_email").val(resp.customer.email);
+                        $("#pay_cmnd").val(resp.customer.cmnd);
+                        $("#pay_address").val(resp.customer.address);
+                        $("#pay_item_kind").val(resp.item_kind);
+                        $("#pay_item_name").val(resp.item_name);
+                        $("#pay_from_date").val(resp.from_date);
+                        $("#pay_to_date").val(resp.to_date);
+                        $("#pay_rate").val(resp.rate);
+                        $("#pay_week").val(resp.week);
+                        $("#pay_price").val(resp.price_pawn);
+                        $("#pay_price_rate").val(resp.price_rate);
+                    },
+                    error: function(resp){
+                        console.log(resp)
+
+                    }
+                })
+    };
+    if(url == url_redeem){
+        $("#redeem_id").val(id);
+        $.ajax({
+                    url: "/invoice/filter_one/"+id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(resp){
+                        $("#redeem_name").val(resp.customer.name);
+                        $("#redeem_phone").val(resp.customer.phone);
+                        $("#redeem_email").val(resp.customer.email);
+                        $("#redeem_cmnd").val(resp.customer.cmnd);
+                        $("#redeem_address").val(resp.customer.address);
+                        $("#redeem_item_kind").val(resp.item_kind);
+                        $("#redeem_item_name").val(resp.item_name);
+                        $("#redeem_from_date").val(resp.from_date);
+                        $("#redeem_to_date").val(resp.to_date);
+                        $("#redeem_rate").val(resp.rate);
+                        $("#redeem_week").val(resp.week);
+                        $("#redeem_price").val(resp.price_pawn);
+                        $("#redeem_price_rate").val(resp.price_rate);
+                },
+                    error: function(resp){
+                        console.log(resp)
+
+                    }
+                })
+    };
+});
 

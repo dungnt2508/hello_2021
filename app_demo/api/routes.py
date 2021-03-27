@@ -101,24 +101,41 @@ def invoice_create():
 def invoice_pay():
     return Invoice().pay()
 
+@bp_invoice.route('/pay/<id>', methods=('GET','POST'))
+def invoice_pay_id(id):
+    return Invoice().pay_id(id)
+
 
 @bp_invoice.route('/redeem', methods=('GET','POST'))
 def invoice_redeem():
     return Invoice().redeem()
 
+@bp_invoice.route('/redeem/<id>', methods=('GET','POST'))
+def invoice_redeem_id(id):
+    return Invoice().redeem_id(id)
 
 
-@bp_setting.route('/get_rate/<kind_item>', methods=['GET'])
-def get_rate(kind_item):
-    return Settings().get_rate(int(kind_item))
+
+@bp_setting.route('/get_rate_kind_item/<kind_item>', methods=['GET'])
+def get_rate_kind_item(kind_item):
+    return Settings().get_rate_kind_item(int(kind_item))
 
 @bp_setting.route('/set_rule', methods=('GET','POST'))
 def set_rule():
     return Settings().set_rules()
 
-@bp_setting.route('/set_rate', methods=('GET','POST'))
-def set_rate():
-    return Settings().set_rate()
+@bp_setting.route('/filter_rate', methods=('GET','POST'))
+def filter_rate():
+    return Settings().filter_rate()
+
+
+@bp_setting.route('/set_rate/<id>',methods=('GET','POST'))
+def set_rate(id):
+    return Settings().set_rate(id)
+
+@bp_setting.route('/update_rate/', methods=('GET','POST'))
+def update_rate():
+    return Settings().update_rate()
 
 
 @bp_funds.route('/collect', methods=('GET','POST'))

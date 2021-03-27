@@ -55,7 +55,7 @@ class User:
                 g.logs = list(db.logs.find({},{"_id": 0}))
                 # print(g.logs)
                 # setting filter
-                g.pipeline_filter_status = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': '-1' } } } },{ '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } }, { '$match': { 'status_invoice': '%s' } } ]"
+                g.pipeline_filter_status = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': '-1' } } } },{ '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1,'status_invoice':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } }, { '$match': { 'status_invoice': '%s' } } ]"
                 g.pipeline_filter_all = "[ { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':{ '$switch':{ 'branches':[ { 'case':{ '$and':[ { '$gt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'0' }, { 'case':{ '$and':[ { '$eq':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'1' }, { 'case':{ '$and':[ { '$lt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'2' } ], 'default':'-1' } } } }, { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } } ]"
 
         except Exception as e:
@@ -107,37 +107,35 @@ class User:
             :return:
         """
         try:
-            pass
+            if request.method == 'POST':
+                user_name = request.form['user_name']
+                password = request.form['password']
+                error = None
+                # print(user_name)
+                if '@' in user_name:  # filter by email
+                    user = db.users.find_one({'email': user_name})
+                if '@' not in user_name:  # filter by user_name
+                    user = db.users.find_one({'user_name': user_name})
+
+                if user is None:
+                    error = 'Incorrect username.'
+                    return jsonify({"error": error}), 400
+                elif not check_password_hash(user['password'], password):
+                    error = 'Incorrect password.'
+                    return jsonify({"error": error}), 400
+
+                if error is None:
+                    session.clear()
+                    session['email'] = user['email']
+                    session['user_name'] = user['user_name']
+                    session['id'] = str(user['_id'])
+                    # print(session)
+
+                    return jsonify(user), 200
+
+                flash(error)
         except Exception as e:
             print(str(e))
-        if request.method == 'POST':
-            user_name = request.form['user_name']
-            password = request.form['password']
-            error = None
-            # print(user_name)
-            if '@' in user_name:  # filter by email
-                user = db.users.find_one({'email': user_name})
-            if '@' not in user_name:  # filter by user_name
-                user = db.users.find_one({'user_name': user_name})
-
-            if user is None:
-                error = 'Incorrect username.'
-                return jsonify({"error": error}), 400
-            elif not check_password_hash(user['password'], password):
-                error = 'Incorrect password.'
-                return jsonify({"error": error}), 400
-
-            if error is None:
-                session.clear()
-                session['email'] = user['email']
-                session['user_name'] = user['user_name']
-                session['id'] = str(user['_id'])
-                # print(session)
-
-                return jsonify(user), 200
-
-            flash(error)
-
         return render_template('user/login.html')
 
     def logout(self):
@@ -146,10 +144,9 @@ class User:
         :return:
         """
         try:
-            pass
+            session.clear()
         except Exception as e:
             print(str(e))
-        session.clear()
         return redirect("/")
 
     def create(self, type):
@@ -159,41 +156,41 @@ class User:
             :return:
         """
         try:
-            pass
+            if type == 1:
+                if request.method == 'POST':
+                    # Create the user object
+                    user_name = create_user_name(request.form.get("name"))
+                    count_user = db.users.find({"user_name": {"$regex": user_name}}).count()
+                    user = {
+                        "_id": uuid.uuid4().hex,
+                        "name": request.form["name"],
+                        "user_name": user_name + str(count_user + 1),
+                        "email": request.form["email"],
+                        "phone": request.form["phone"],
+                        "password": request.form.get("password"),
+                        "cmnd": request.form.get("cmnd"),
+                        "cmnd_1": request.form.get("cmnd_1"),
+                        "cmnd_2": request.form.get("cmnd_2"),
+                        "note": request.form.get("note"),
+                        "is_admin": False
+                    }
+
+                    # Encrypt the password
+                    user["password"] = generate_password_hash(user["password"])
+
+                    # Check exists email
+                    if db.users.find_one({"email": user["email"]}):
+                        return jsonify({"error": "Email address already in use"}), 400
+                    if db.users.insert_one(user):
+                        Logs().insert_log(1, user)
+                        return jsonify(user), 200
+
+                return render_template('user/create.html')
+            if type == 2:
+                return render_template('customer/create.html')
         except Exception as e:
             print(str(e))
-        if type == 1:
-            if request.method == 'POST':
-                # Create the user object
-                user_name = create_user_name(request.form.get("name"))
-                count_user = db.users.find({"user_name": {"$regex": user_name}}).count()
-                user = {
-                    "_id": uuid.uuid4().hex,
-                    "name": request.form["name"],
-                    "user_name": user_name + str(count_user + 1),
-                    "email": request.form["email"],
-                    "phone": request.form["phone"],
-                    "password": request.form.get("password"),
-                    "cmnd": request.form.get("cmnd"),
-                    "cmnd_1": request.form.get("cmnd_1"),
-                    "cmnd_2": request.form.get("cmnd_2"),
-                    "note": request.form.get("note"),
-                    "is_admin": False
-                }
 
-                # Encrypt the password
-                user["password"] = generate_password_hash(user["password"])
-
-                # Check exists email
-                if db.users.find_one({"email": user["email"]}):
-                    return jsonify({"error": "Email address already in use"}), 400
-                if db.users.insert_one(user):
-                    Logs().insert_log(1, user)
-                    return jsonify(user), 200
-
-            return render_template('user/create.html')
-        if type == 2:
-            return render_template('customer/create.html')
 
     def dashboard(self):
         """
@@ -203,20 +200,134 @@ class User:
         count_expired = 0
         count_over_expired = 0
         invoices = []
+        price_collect = 0
+        price_spent = 0
         try:
             today = str(date.today())
 
             count_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '1')))))
             count_over_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '2')))))
             invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_all % (today, today, today))))
+
             # invoices['price_pawn'] = ["{:,}".format(float(invoice['price_pawn'])) for invoice in invoices]
             for i in invoices:
                 i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
                 i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
 
+            pipeline_collect = [
+                {
+                    '$project': {
+                        '_id': 0
+                    }
+                }, {
+                    '$match': {
+                        'status': 1
+                    }
+                }, {
+                    '$project': {
+                        '_id': 0,
+                        'collect': 1,
+                        'status': 1,
+                        'invoice_id': '$collect.source.invoice_id',
+                        'note': '$collect.note',
+                        'date_created': '$collect.date_created',
+                        'user_created': '$collect.user_created',
+                        'price': '$collect.price',
+                        'type': {
+                            '$switch': {
+                                'branches': [
+                                    {
+                                        'case': {
+                                            '$eq': [
+                                                '$collect.type', 1
+                                            ]
+                                        },
+                                        'then': 'Khác'
+                                    }, {
+                                        'case': {
+                                            '$eq': [
+                                                '$collect.type', 2
+                                            ]
+                                        },
+                                        'then': 'Gia hạn'
+                                    }, {
+                                        'case': {
+                                            '$eq': [
+                                                '$collect.type', 3
+                                            ]
+                                        },
+                                        'then': 'Tất toán'
+                                    }
+                                ],
+                                'default': '-1'
+                            }
+                        }
+                    }
+                },
+                {'$sort': {'_id': 1}}
+            ]
+
+            lst_collect = list(db.funds.aggregate(pipeline_collect))
+            for i in lst_collect:
+                price_collect += int(i["price"])
+
+            pipeline_spent = [
+                {
+                    '$project': {
+                        '_id': 0
+                    }
+                }, {
+                    '$match': {
+                        'status': 2
+                    }
+                }, {
+                    '$project': {
+                        '_id': 0,
+                        'spent': 1,
+                        'status': 1,
+                        'invoice_id': '$spent.source.invoice_id',
+                        'note': '$spent.note',
+                        'date_created': '$spent.date_created',
+                        'user_created': '$spent.user_created',
+                        'price': '$spent.price',
+                        'type': {
+                            '$switch': {
+                                'branches': [
+                                    {
+                                        'case': {
+                                            '$eq': [
+                                                '$spent.type', 1
+                                            ]
+                                        },
+                                        'then': 'Khác'
+                                    }, {
+                                        'case': {
+                                            '$eq': [
+                                                '$spent.type', 2
+                                            ]
+                                        },
+                                        'then': 'Lập hợp đồng'
+                                    }
+                                ],
+                                'default': '-1'
+                            }
+                        }
+                    }
+                },
+                {'$sort': {'_id': 1}}
+            ]
+
+            lst_spent = list(db.funds.aggregate(pipeline_spent))
+            for i in lst_spent:
+                price_spent += int(i["price"])
+
         except Exception as e:
             print(str(e))
-        return render_template('page/dashboard.html', count_expired=count_expired, count_over_expired=count_over_expired, invoices=invoices)
+        return render_template('page/dashboard.html', count_expired=count_expired,
+                               count_over_expired=count_over_expired,
+                               invoices=invoices,
+                               price_collect="${:,.0f}".format(float(price_collect)),
+                               price_spent="${:,.0f}".format(float(price_spent)))
 
     def filter(self):
         """
@@ -253,40 +364,6 @@ class Customer:
             pass
         except Exception as e:
             print(str(e))
-        # if type == 1:
-        #     if request.method == 'POST':
-        #         # Create the user object
-        #         user_name = create_user_name(request.form.get("name"))
-        #         count_user = db.users.find({"user_name": {"$regex": user_name}}).count()
-        #         user = {
-        #             "_id": uuid.uuid4().hex,
-        #             "name": request.form.get("name"),
-        #             "user_name": user_name + str(count_user + 1),
-        #             "email": request.form.get("email"),
-        #             "phone": request.form.get("phone"),
-        #             "password": request.form.get("password"),
-        #             "cmnd_1": request.form.get("cmnd_1"),
-        #             "cmnd_2": request.form.get("cmnd_2"),
-        #             "note": request.form.get("note"),
-        #             "is_admin": False
-        #         }
-        #
-        #         # Encrypt the password
-        #         user["password"] = generate_password_hash(user["password"])
-        #
-        #         # Check exists email
-        #         if db.users.find_one({"email": user["email"]}):
-        #             return jsonify({"error": "Email address already in use"}), 400
-        #         if db.users.insert_one(user):
-        #             session.clear()
-        #             session['name'] = user['name']
-        #             session['user_name'] = user['user_name']
-        #             session['id'] = str(user['_id'])
-        #             return jsonify(user), 200
-        #
-        #     return render_template('user/create.html')
-        # if type == 2:
-        #     return render_template('user/create.html')
         return render_template('user/create.html')
 
     def filter(self):
@@ -299,12 +376,12 @@ class Customer:
         return render_template('customer/list.html', customers=customers)
 
     def filter_one(self, email):
+        user = {}
         try:
             user = db.customers.find_one({"email": email}, {"_id": 0})
             # print(user)
         except Exception as e:
             print(str(e))
-
         return render_template('customer/profile.html', user=user)
 
 
@@ -510,6 +587,23 @@ class Invoice:
             print(str(e))
         return render_template('invoice/pay.html')
 
+    def pay_id(self, id):
+        """
+        - thanh toán lãi : tính tiền lãi dựa vào số tuần muốn gia hạn
+            update from_date = ngày đến hạn thanh toán
+                    to_date = from_date + tuần gia hạn
+                    status = 2 : trang thái gia hạn
+            insert tiền lãi + tiền trả trước (nếu có) vào khoản thu
+        funds.collect.type : 1 : THU từ quản lý quỹ / 2 : THU từ tiền lãi
+        funds.spent.type : 1 : CHI từ quản lý quỹ / 2 : CHI từ làm hợp đồng
+        :return:
+        """
+        try:
+            pass
+        except Exception as e:
+            print(str(e))
+        return render_template('invoice/pay.html')
+
     def redeem(self):
         """
         - tất toán : tính tiền lãi + tiền gốc
@@ -556,9 +650,21 @@ class Invoice:
             print(str(e))
         return render_template('invoice/redeem.html')
 
-    def filter(self):
+    def redeem_id(self, id):
+        """
+        :return:
+        """
         try:
-            invoices = list(db.invoice.find({}, {'_id': 0}))
+            pass
+        except Exception as e:
+            print(str(e))
+        return render_template('invoice/redeem.html')
+
+    def filter(self):
+        invoices = []
+        try:
+            today = str(date.today())
+            invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_all % (today, today, today))))
             for i in invoices:
                 i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
                 i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
@@ -602,7 +708,7 @@ class Invoice:
 
     def filter_one(self,id):
         try:
-            invoices = db.invoice.find_one({"invoice_id": id}, {'_id': 0})
+            invoices = db.invoice.find_one({"invoice_id": id, "status": 1}, {'_id': 0})
             invoices['price_pawn'] = "{:,.0f}".format(float(invoices['price_pawn']))
             invoices['price_rate'] = "{:,.0f}".format(float(invoices['price_rate']))
         except Exception as e:
@@ -611,15 +717,60 @@ class Invoice:
 
 
 class Settings:
-    def get_rate(self, kind_item):
+    def get_rate_kind_item(self, kind_item):
+        rate = 0
         try:
-            rate = 0
             setting = db.settings.find_one({"kind_item": str(kind_item), "status": "1"}, {"_id": 0})
             if setting:
                 rate = int(setting["rate"]) + int(setting["service_charge"]) + int(setting["storage_charge"])
         except Exception as e:
             print(str(e))
         return jsonify(rate), 200
+
+    def set_rate(self, kind_item):
+        setting = {}
+        try:
+            setting = db.settings.find_one({"kind_item": str(kind_item), "status": "1"},{"_id": 0})
+            # print(setting)
+        except Exception as e:
+            print(str(e))
+        return jsonify(setting), 200
+
+    def update_rate(self):
+        try:
+            if request.method == "POST":
+                upd_kind_item = str(request.form.get("upd_kind_item"))
+                upd_item_name = request.form.get("upd_item_name")
+                upd_rate = str(request.form.get("upd_rate"))
+                upd_service_charge = str(request.form.get("upd_service_charge"))
+                upd_storage_charge = str(request.form.get("upd_storage_charge"))
+                if db.settings.find_one({"kind_item": upd_kind_item, "status": "1"}):
+                    db.settings.update_one({"kind_item": upd_kind_item, "status": "1"},
+                                       {"$set":
+                                            {"item_name": upd_item_name,
+                                             "rate": upd_rate,
+                                             "service_charge": upd_service_charge,
+                                             "storage_charge": upd_storage_charge}})
+
+                else:
+                    db.settings.insert_one({
+                                                 "kind_item": upd_kind_item,
+                                                 "item_name": upd_item_name,
+                                                 "rate": upd_rate,
+                                                 "service_charge": upd_service_charge,
+                                                 "storage_charge": upd_storage_charge,
+                                                 "status": "1"})
+                Logs().insert_log(4, {
+                    "kind_item": upd_kind_item,
+                    "item_name": upd_item_name,
+                    "rate": upd_rate,
+                    "service_charge": upd_service_charge,
+                    "storage_charge": upd_storage_charge
+                })
+                return jsonify({"result": "1", "msg": "update done"}), 200
+        except Exception as e:
+            print(str(e))
+        return render_template('settings/set_rate.html')
 
     def set_rules(self):
         try:
@@ -628,12 +779,12 @@ class Settings:
             print(str(e))
         return render_template('settings/set_rule.html')
 
-    def set_rate(self):
+    def filter_rate(self):
         try:
             lst_rate = db.settings.find({"status": "1"}, {"_id": 0})
         except Exception as e:
             print(str(e))
-        return render_template('settings/set_rate.html', lst_rate=lst_rate)
+        return render_template('settings/list_rate.html', lst_rate=lst_rate)
 
 
 class Funds:
@@ -790,6 +941,7 @@ class Funds:
             lst_collect = list(db.funds.aggregate(pipeline_collect))
             for i in lst_collect:
                 price_collect += int(i["price"])
+                i["price"] = "{:,.0f}".format(float(i["price"]))
 
             pipeline_spent = [
                 {
@@ -840,12 +992,12 @@ class Funds:
             lst_spent = list(db.funds.aggregate(pipeline_spent))
             for i in lst_spent:
                 price_spent += int(i["price"])
+                i["price"] = "{:,.0f}".format(float(i["price"]))
             print(price_collect)
             print(price_spent)
         except Exception as e:
             print(str(e))
-
-        return render_template('funds/list.html', lst_collect=lst_collect, price_collect=price_collect, lst_spent=lst_spent, price_spent=price_spent)
+        return render_template('funds/list.html', lst_collect=lst_collect, price_collect = "${:,.0f}".format(float(price_collect)), lst_spent=lst_spent, price_spent = "${:,.0f}".format(float(price_spent)))
 
 
 class Logs:
@@ -875,11 +1027,11 @@ class Logs:
                 if dict["status"] == 1: # hợp đồng mới
                     log_dict["log"] = "Chi " + dict["price"] + " - Note : lập hợp đồng " + dict["invoice_id"]
                 if dict["status"] == 2: # hợp đồng trả lãi
-                    log_dict["log"] = "Thu " + dict["price"] + " - Note :  thu lãi hợp đồng " + dict["invoice_id"]
+                    log_dict["log"] = "Thu " + "{:,.0f}".format(float(dict["price"])) + " - Note :  thu lãi hợp đồng " + dict["invoice_id"]
                 if dict["status"] == 0: # hợp đồng tất toán
-                    log_dict["log"] = "Thu " + dict["price"] + " - Note :  tất toán hợp đồng " + dict["invoice_id"]
+                    log_dict["log"] = "Thu " + "{:,.0f}".format(float(dict["price"])) + " - Note :  tất toán hợp đồng " + dict["invoice_id"]
             if type == 4:   # log settings
-                log_dict["log"] = " thiết lập lại lãi suất"
+                log_dict["log"] = "Cập nhật lãi suất cho " + dict["item_name"]
             if type == 5:   # log funds.collect
                 if dict["collect"]:
                     log_dict["log"] = dict["collect"]["source"]['source'] + " Nạp vào " + "{:,.0f}".format(float(dict["collect"]["price"])) + " - Note : " + dict["collect"]["note"]
