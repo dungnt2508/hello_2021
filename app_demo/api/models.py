@@ -39,7 +39,7 @@ class User:
 
                 g.settings = db.settings.find({"status": "1"}, {"_id": 0})
                 g.total_invoice = 0
-                if db.invoice.find(({"status": 1})).count() > 0:
+                if db.invoice.find(({})).count() > 0:
                     g.total_invoice = db.invoice.find().count()
                     g.invoices = db.invoice.find()
                 g.total_customer = db.customers.find().count()
@@ -708,7 +708,7 @@ class Invoice:
 
     def filter_one(self,id):
         try:
-            invoices = db.invoice.find_one({"invoice_id": id, "status": 1}, {'_id': 0})
+            invoices = db.invoice.find_one( {"$or":[{"status":1},{"status":2}],"invoice_id":id} )
             invoices['price_pawn'] = "{:,.0f}".format(float(invoices['price_pawn']))
             invoices['price_rate'] = "{:,.0f}".format(float(invoices['price_rate']))
         except Exception as e:
