@@ -5,6 +5,9 @@ services:
   viet_gold:
     # A container that exposes an API to show its IP address
     image: viet_gold
+    build:
+      context: .
+      dockerfile: Dockerfile
     deploy:
       labels:
         - "traefik.enable=true"
