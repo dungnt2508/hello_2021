@@ -13,9 +13,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app_demo.db import db
 from instance.rule_name import create_user_name
 
-import pandas as pd
-
-
 class User:
     """
     User
