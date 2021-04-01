@@ -2,20 +2,33 @@ version: "3"
 
 services:
 
-  viet_gold:
-    # A container that exposes an API to show its IP address
-    image: viet_gold
-    build:
-      context: .
-      dockerfile: Dockerfile
-    deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.viet_gold.rule=Host(`quanly.camdovietgold.com`)"
-        - "traefik.http.routers.viet_gold.entrypoints=web"
-        - "traefik.http.services.viet_gold.loadbalancer.server.port=5000"
-    networks:
-      - traefik-public
+    viet_gold:
+        # A container that exposes an API to show its IP address
+        image: viet_gold
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports: 
+            - 5000:5000
+        deploy:
+            labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.viet_gold.rule=Host(`quanly.camdovietgold.com`)"
+            - "traefik.http.routers.viet_gold.entrypoints=web"
+            - "traefik.http.services.viet_gold.loadbalancer.server.port=5000"
+        networks:
+            - traefik-public
+
+    mongodb:
+        image: mongo
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: abcd1234
+        ports: 
+            - 27017:27017
+        networks:
+            - traefik-public
 
 networks:
   traefik-public:

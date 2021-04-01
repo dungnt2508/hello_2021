@@ -13,4 +13,4 @@ if __name__ == '__main__':
     app.config['APP_NS'] = config['TEST']['APP_NS']
     app.config['SECRET_KEY'] = config['TEST']['SECRET_KEY']
 
-    app.run()
+    app.run(host="0.0.0.0",port=5000)
