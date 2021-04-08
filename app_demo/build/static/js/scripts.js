@@ -118,6 +118,7 @@ $("form[name=invoice_pawn]").submit(function(e){
         dataType: "json",
         success: function(resp){
             console.log(resp)
+            readTextFile();
             window.location.href = "/page/dashboard";
         },
         error: function(resp){
@@ -128,7 +129,36 @@ $("form[name=invoice_pawn]").submit(function(e){
 
     e.preventDefault();
 })
+// 20210408: Add Function to load html template and export
+/*Function Print_Invoice_Bill()
+{
+var myBlob;
 
+    doc.fromHTML($('#content').html(), 15, 15, {
+        'width': 170,
+            'elementHandlers': specialElementHandlers
+    });
+    myBlob = doc.save('blob');
+
+}*/
+function readTextFile()
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", "./templates/report/hopdong_v1.htm", false);
+
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                alert(allText);
+            }
+        }
+    }
+    rawFile.send(null);
+}
 
 $("#pawn_item_kind").on("change",function(e){
         $("#pawn_from_date").val("");
