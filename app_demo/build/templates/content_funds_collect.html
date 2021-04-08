@@ -32,18 +32,19 @@
               <!-- form start -->
               <form name="funds_collect">
                 <div class="card-body">
-	                 <div class="form-group">
-                    <label for="price">Số tiền</label>
+	                 <div class="form-group row">
+                    <label for="price"class="col-sm-2">Số tiền</label>
+                       <div class="col-sm-4">
                     <input type="text" name="price" id="price" class="form-control"  pattern="^\d{1,3}(,\d{3})*(\.\d+)?$" value="" data-type="currency" placeholder="Nhập số tiền">
-<!--                    <input type="number" name="price" class="form-control" id="price" placeholder="Nhập số tiền">-->
+                         </div>
+                    <label for="user_created" class="col-sm-2">Người nhập</label>
+                         <div class="col-sm-4">
+                    <input type="text" name="user_created" class="form-control" id="user_created" value="{% if g.user %} {{g.user['name']}} {% endif %}" readonly="true">
+                           </div>
                   </div>
 	                 <div class="form-group">
-                    <label for="source">Nguồn thu</label>
+                    <label for="source" >Nguồn thu</label>
                     <input type="text" name="source" class="form-control" id="source" placeholder="Nhập nguồn tiền">
-                  </div>
-	                <div class="form-group">
-                    <label for="user_created">Người nhập</label>
-                    <input type="text" name="user_created" class="form-control" id="user_created" value="{% if g.user %} {{g.user['name']}} {% endif %}" readonly="true">
                   </div>
 
 	                <div class="form-group">
@@ -59,7 +60,7 @@
 	        </div>
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <button type="submit" class="btn btn-primary">Lưu</button>
                 </div>
               </form>
             </div>
