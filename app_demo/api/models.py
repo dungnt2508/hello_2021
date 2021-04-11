@@ -436,7 +436,9 @@ class Invoice:
                 treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))
                 if treasure:
                     funds = int(treasure[0]["funds"])
-
+                if db.invoices.find_one({"invoice_id": invoice_id}):
+                    error = 'Mã HĐ đã tồn tại'
+                    return jsonify({"error": error}), 400
                 if name is None or len(name) == 0:
                     error = 'Chưa nhập họ tên KH'
                     return jsonify({"error": error}), 400
@@ -828,7 +830,7 @@ class Funds:
                     error = 'Số tiền chưa nhập'
                     return jsonify({"error": error}), 400
                 price = int(price.replace(',', ''))
-                if price % 10000 !=0:
+                if price % 1000 !=0:
                     error = 'Số tiền phải chia hết cho 10.000'
                     return jsonify({"error": error}), 400
                 source = {"invoice_id": "","source": request.form.get("source")}
@@ -875,7 +877,7 @@ class Funds:
                     error = 'Số tiền chưa nhập'
                     return jsonify({"error": error}), 400
                 price = int(price.replace(',', ''))
-                if price % 10000 !=0:
+                if price % 1000 !=0:
                     error = 'Số tiền phải chia hết cho 10.000'
                     return jsonify({"error": error}), 400
                 source = {"invoice_id": "","source": request.form.get("source")}
