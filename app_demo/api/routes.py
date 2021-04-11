@@ -10,6 +10,7 @@ bp_setting = Blueprint('setting',__name__, url_prefix='/setting')
 bp_funds = Blueprint('funds',__name__, url_prefix='/funds')
 
 
+
 @bp_user.before_app_request
 # @bp_page.before_app_request
 # @bp_customer.before_app_request
@@ -48,6 +49,10 @@ def create(type):
 @bp_page.route('/dashboard', methods=['GET'])
 def dashboard():
     return User().dashboard()
+
+@bp_page.route('/get_invoice/<id>', methods=['GET'])
+def get_invoice(id):
+    return User().get_invoice(id)
 
 
 @bp_user.route('/filter', methods=['GET'])
@@ -151,3 +156,4 @@ def spent():
 @bp_funds.route('/filter', methods=('GET','POST'))
 def funds_filter():
     return Funds().filter()
+

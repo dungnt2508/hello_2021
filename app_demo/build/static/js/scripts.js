@@ -78,7 +78,6 @@ $("form[name=register_form_customer]").submit(function(e){
 
 // F đăng nhập
 $("form[name=login_form]").submit(function(e){
-
     var $form = $(this);
     var $error = $form.find(".error");
     var data = $form.serialize();
@@ -118,8 +117,14 @@ $("form[name=invoice_pawn]").submit(function(e){
         dataType: "json",
         success: function(resp){
             console.log(resp)
-            readTextFile();
-            window.location.href = "/page/dashboard";
+//            readTextFile();
+
+            window.open(
+                  "/page/get_invoice/"+resp.invoice_id ,
+                  '_blank' // <- This is what makes it open in a new window.
+
+            );
+            window.location.href = "/page/dashboard" ;
         },
         error: function(resp){
             console.log(resp)
@@ -129,6 +134,9 @@ $("form[name=invoice_pawn]").submit(function(e){
 
     e.preventDefault();
 })
+
+
+
 // 20210408: Add Function to load html template and export
 /*Function Print_Invoice_Bill()
 {
@@ -141,24 +149,38 @@ var myBlob;
     myBlob = doc.save('blob');
 
 }*/
-function readTextFile()
-{
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", "./templates/report/hopdong_v1.htm", false);
+//function test2()
+//{
+//
+//
+//   var reader = new XMLHttpRequest() || new ActiveXObject('MSXML2.XMLHTTP');
+//   reader.open('get', 'http://localhost/test/hopdong_v1.txt', true);
+//    //reader.onreadystatechange = displayContents;
+//    //reader.send(null);
+//    alert(reader.responseText);
+//}
 
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-                alert(allText);
-            }
-        }
-    }
-    rawFile.send(null);
-}
+
+//function test()
+//{
+//    var rawFile = new XMLHttpRequest();
+//
+//
+//    rawFile.open("GET", "file:///D:/Project/CamDoVietGold/vietgold_app/app_demo/build/templates/page/hopdong_v1.txt");
+//
+//    rawFile.onreadystatechange = function ()
+//    {
+//        if(rawFile.readyState === 4)
+//        {
+//            if(rawFile.status === 200 || rawFile.status == 0)
+//            {
+//                var allText = rawFile.responseText;
+//                alert(allText);
+//            }
+//        }
+//    }
+//    rawFile.send(null);
+//}
 
 $("#pawn_item_kind").on("change",function(e){
         $("#pawn_from_date").val("");

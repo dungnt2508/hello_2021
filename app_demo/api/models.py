@@ -326,6 +326,26 @@ class User:
                                price_collect="${:,.0f}".format(float(price_collect)),
                                price_spent="${:,.0f}".format(float(price_spent)))
 
+    def get_invoice(self,id):
+        """
+            show dashboard
+        :return:
+        """
+        invoice = {}
+        try:
+
+            invoice = db.invoice.find_one({"invoice_id":id})
+            invoice["from_date"] = dt.datetime.strptime(invoice["from_date"], "%Y-%m-%d").strftime("%d-%m-%Y")
+            invoice["to_date"] = dt.datetime.strptime(invoice["to_date"], "%Y-%m-%d").strftime("%d-%m-%Y")
+            invoice["date_created"] = dt.datetime.strptime(str(invoice["date_created"]), "%Y-%m-%d %H:%M:%S.%f").strftime("%d-%m-%Y")
+            invoice["price_rate"] = "{:,.0f}".format(invoice["price_rate"])
+            invoice["price_pawn"] = "{:,.0f}".format(invoice["price_pawn"])
+            print(invoice)
+
+        except Exception as e:
+            print(str(e))
+        return render_template('page/hopdong.html', invoice=invoice)
+
     def filter(self):
         """
             filter
@@ -424,7 +444,7 @@ class Invoice:
                 if price is None or len(price) == 0:
                     error = 'Chưa nhập số tiền vay'
                     return jsonify({"error": error}), 400
-                if int(price.replace(',', '')) % 10000 != 0:
+                if int(price.replace(',', '')) % 1000 != 0:
                     error = 'Số tiền vay phải chia hết cho 10.000'
                     return jsonify({"error": error}), 400
                 if from_date is None or len(from_date) == 0:
@@ -487,6 +507,7 @@ class Invoice:
                 }
 
                 if db.invoice.insert_one(invoice_pawn):
+
                     Logs().insert_log(3, {"invoice_id": invoice_id, "status": 1, "price": price})  # insert log
 
                     funds_spent = {
@@ -505,6 +526,7 @@ class Invoice:
                     }
                     db.funds.insert_one(funds_spent)
                 return jsonify(invoice_pawn), 200
+                # return render_template("report/hopdong_v1.htm")
         except Exception as e:
             print(str(e))
         return render_template('invoice/create.html')
@@ -995,6 +1017,8 @@ class Funds:
         except Exception as e:
             print(str(e))
         return render_template('funds/list.html', lst_collect=lst_collect, price_collect = "${:,.0f}".format(float(price_collect)), lst_spent=lst_spent, price_spent = "${:,.0f}".format(float(price_spent)))
+
+
 
 
 class Logs:

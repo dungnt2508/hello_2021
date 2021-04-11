@@ -48,19 +48,26 @@
 # end_date = datetime.strptime('2021-03-25', "%Y-%m-%d")
 # print((end_date-start_date).days)
 
+#
+# from datetime import date
+#
+# today = date.today()
+# print("Today's date:", today)
+#
+#
+#
+# pipeline_filter = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': 0 }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': 1 }, { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': 2 } ], 'default': -1 } } } }, { '$match': { 'status_invoice': {'$toInt':'%s'} } } ]"
+#
+# pipeline_filter = pipeline_filter%(today,today,today,2)
+# print(pipeline_filter)
+#
+#
+# a = "{:,.0f}".format(float(10000))
+# print(a)
 
-from datetime import date
 
-today = date.today()
-print("Today's date:", today)
+import datetime
 
+print(datetime.datetime.today())
 
-
-pipeline_filter = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': 0 }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': 1 }, { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': 2 } ], 'default': -1 } } } }, { '$match': { 'status_invoice': {'$toInt':'%s'} } } ]"
-
-pipeline_filter = pipeline_filter%(today,today,today,2)
-print(pipeline_filter)
-
-
-a = "{:,.0f}".format(float(10000))
-print(a)
+print(datetime.datetime.strptime('2021-04-11 13:46:15.486433', "%Y-%m-%d %H:%M:%S.%f").strftime("%d-%m-%Y"))
