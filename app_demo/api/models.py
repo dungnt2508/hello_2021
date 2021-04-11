@@ -340,11 +340,19 @@ class User:
             invoice["date_created"] = dt.datetime.strptime(str(invoice["date_created"]), "%Y-%m-%d %H:%M:%S.%f").strftime("%d-%m-%Y")
             invoice["price_rate"] = "{:,.0f}".format(invoice["price_rate"])
             invoice["price_pawn"] = "{:,.0f}".format(invoice["price_pawn"])
+
+            rate = db.settings.find_one({"kind_item":invoice["item_kind"]})
             print(invoice)
+            if invoice["item_kind"] in ("1", "2", "4", "5", "7", "8", "9"):
+                return render_template('page/hopdong.html', invoice=invoice, rate=rate)
+            else:
+                return render_template('page/hopdong_not.html', invoice=invoice, rate=rate)
 
         except Exception as e:
             print(str(e))
-        return render_template('page/hopdong.html', invoice=invoice)
+
+        return render_template('page/hopdong.html', invoice=invoice, rate=rate)
+
 
     def filter(self):
         """
