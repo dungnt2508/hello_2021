@@ -99,7 +99,8 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table id="example2" data-locale="zh-CN" style="text-nowrap" class="table table-bordered table-striped table-responsive">
+                <div class="table-responsive">
+              <table id="example2"  style="white-space:nowrap" class="table table-bordered table-hover">
                 <thead>
                 <tr>
 <!--                  <th>Mã HĐ</th>-->
@@ -135,32 +136,18 @@
 <!--	                <td>{{ invoice['status'] }}</td>-->
 	                <td >
 	                {%  if invoice['status'] !=0 %}
-	                    <button type="button" class="btn btn-default" onclick="cms_pay(this.id)" id="{{ invoice['invoice_id'] }}"><i title="gia hạn" ></i> Gia hạn</button>
-		                <button type="button" class="btn btn-primary" onclick="cms_redeem(this.id)" id="{{ invoice['invoice_id'] }}"><i  title="Tất toán" ></i> Tất toán</button>
+
+	                    <button type="button" class="btn btn-default" onclick="cms_pay(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fa fa-retweet"></i> Gia hạn</button>
+		                <button type="button" class="btn btn-primary" onclick="cms_redeem(this.id)" id="{{ invoice['invoice_id'] }}"><i  class="fa fa-check-circle" ></i> Tất toán</button>
 	                {% endif %}
 	                </td>
                 </tr>
                 {%  endfor %}
 
                 </tbody>
-<!--                <tfoot>-->
-<!--                <tr>-->
-<!--&lt;!&ndash;                  <th>Mã HĐ</th>&ndash;&gt;-->
-<!--                  <th>Tên KH</th>-->
-<!--                  <th>SĐT</th>-->
-<!--                  <th>Tài sản</th>-->
-<!--                  <th>Số tiền vay</th>-->
-<!--	                <th>Ngày vay</th>-->
-<!--	                <th>Đến ngày</th>-->
-<!--	                <th>% Lãi</th>-->
-<!--	                <th>% Phí bảo quản</th>-->
-<!--	                <th>% Phí dịch vụ</th>-->
-<!--	                <th>Lãi phí</th>-->
-<!--	                <th>Trạng thái</th>-->
-<!--	                <th></th>-->
-<!--                </tr>-->
-<!--                </tfoot>-->
+
               </table>
+                     </div>
             </div>
             <!-- /.card-body -->
           </div>
