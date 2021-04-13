@@ -99,7 +99,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-              <table id="example2" data-locale="zh-CN" class="table table-bordered table-striped">
+              <table id="example2" data-locale="zh-CN" style="text-nowrap" class="table table-bordered table-striped table-responsive">
                 <thead>
                 <tr>
 <!--                  <th>Mã HĐ</th>-->
@@ -133,10 +133,10 @@
                   <td>{{ invoice['price_rate'] }}</td>
 	                <td>{{ invoice['status_invoice_msg'] }}</td>
 <!--	                <td>{{ invoice['status'] }}</td>-->
-	                <td class="text-center">
+	                <td >
 	                {%  if invoice['status'] !=0 %}
-	                    <button type="button" class="btn btn-primary" onclick="cms_pay(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-play" title="gia hạn" style="margin-right: 1px; cursor: pointer;"></i> Gia hạn</button>
-		                <button type="button" class="btn btn-primary" onclick="cms_redeem(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-play" title="Tất toán" style="margin-right: 1px; cursor: pointer;"></i> Tất toán</button>
+	                    <button type="button" class="btn btn-default" onclick="cms_pay(this.id)" id="{{ invoice['invoice_id'] }}"><i title="gia hạn" ></i> Gia hạn</button>
+		                <button type="button" class="btn btn-primary" onclick="cms_redeem(this.id)" id="{{ invoice['invoice_id'] }}"><i  title="Tất toán" ></i> Tất toán</button>
 	                {% endif %}
 	                </td>
                 </tr>
