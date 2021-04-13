@@ -1,0 +1,6 @@
+graft app_demo/build
+graft instance
+include main.py
+include import_setting.py
+include demo_example.py
+global-exclude *.pyc

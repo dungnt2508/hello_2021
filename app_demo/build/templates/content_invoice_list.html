@@ -29,9 +29,7 @@
             <div class="card-body">
                <div id="toolbar">
               </div>
-              <table id="example3" data-show-export="true" class="table table-bordered table-striped" data-side-pagination="client"
-              data-show-export="true"
-              data-export-types="['excel', 'pdf']">
+              <table id="example2" data-locale="zh-CN" class="table table-bordered table-striped">
                 <thead>
                 <tr>
                   <th>Mã HĐ</th>
@@ -41,6 +39,9 @@
                   <th>Số tiền vay</th>
 	                <th>Ngày vay</th>
 	                <th>Đến ngày</th>
+	                <th>% Lãi</th>
+	                <th>% Phí bảo quản</th>
+	                <th>% Phí dịch vụ</th>
 	                <th>Lãi phí </th>
 	                <th>Trạng thái</th>
                   <th></th>
@@ -56,32 +57,35 @@
                   <td>{{ invoice['price_pawn'] }}</td>
 	                <td>{{ invoice['from_date'] }}</td>
                   <td>{{ invoice['to_date'] }}</td>
+	                <td>{{ invoice['rate_invoice'][0]['rate'] }}</td>
+	                <td>{{ invoice['rate_invoice'][0]['storage_charge'] }}</td>
+	                <td>{{ invoice['rate_invoice'][0]['service_charge'] }}</td>
                   <td>{{ invoice['price_rate'] }}</td>
 	                <td>{{ invoice['status_invoice_msg'] }}</td>
 	                <td class="text-center">
 	                {%  if invoice['status'] !=0 %}
-                        <button type="button" class="btn btn-primary" onclick="cms_pay(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-play" title="gia hạn" style="margin-right: 10px; cursor: pointer;"></i> Gia hạn</button>
-		                <button type="button" class="btn btn-primary" onclick="cms_redeem(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-play" title="Tất toán" style="margin-right: 10px; cursor: pointer;"></i> Tất toán</button>
+                        <button type="button" class="btn btn-primary" onclick="cms_pay(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-play" title="gia hạn" style="margin-right: 1px; cursor: pointer;"></i> Gia hạn</button>
+		                <button type="button" class="btn btn-primary" onclick="cms_redeem(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-play" title="Tất toán" style="margin-right: 1px; cursor: pointer;"></i> Tất toán</button>
 	                {% endif %}
 	                </td>
                 </tr>
                 {%  endfor %}
 
                 </tbody>
-                <tfoot>
-                <tr>
-                  <th>Mã HĐ</th>
-                  <th>Tên KH</th>
-                  <th>SĐT</th>
-                  <th>Tài sản</th>
-                  <th>Số tiền vay</th>
-	                <th>Ngày vay</th>
-	                <th>Đến ngày</th>
-	                <th>Lãi phí</th>
-	                <th>Trạng thái</th>
-                  <th></th>
-                </tr>
-                </tfoot>
+<!--                <tfoot>-->
+<!--                <tr>-->
+<!--                  <th>Mã HĐ</th>-->
+<!--                  <th>Tên KH</th>-->
+<!--                  <th>SĐT</th>-->
+<!--                  <th>Tài sản</th>-->
+<!--                  <th>Số tiền vay</th>-->
+<!--	                <th>Ngày vay</th>-->
+<!--	                <th>Đến ngày</th>-->
+<!--	                <th>Lãi phí</th>-->
+<!--	                <th>Trạng thái</th>-->
+<!--                  <th></th>-->
+<!--                </tr>-->
+<!--                </tfoot>-->
               </table>
             </div>
             <!-- /.card-body -->

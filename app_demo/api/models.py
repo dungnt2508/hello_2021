@@ -4,8 +4,7 @@ import uuid
 import datetime as dt
 from datetime import datetime
 from datetime import date
-
-
+import dateutil.parser
 from datetime import timedelta
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -49,11 +48,12 @@ class User:
                 if db.funds.find_one():
                     g.treasure = "${:,.0f}".format(float(list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))[0]["funds"]))
                 # print(g.settings)
-                g.logs = list(db.logs.find({},{"_id": 0}))
-                # print(g.logs)
+                today = datetime.combine(date.today(), datetime.min.time())
+                g.logs = list(db.logs.find({"date_created": {"$gte": today}}))
+                print(g.logs)
                 # setting filter
-                g.pipeline_filter_status = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': '-1' } } } },{ '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1,'status_invoice':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } }, { '$match': { 'status_invoice': '%s' } } ]"
-                g.pipeline_filter_all = "[ { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':{ '$switch':{ 'branches':[ { 'case':{ '$and':[ { '$gt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'0' }, { 'case':{ '$and':[ { '$eq':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'1' }, { 'case':{ '$and':[ { '$lt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'2' } ], 'default':'-1' } } } }, { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } } ]"
+                g.pipeline_filter_status = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': '-1' } } } },{ '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1,'status_invoice':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } }, { '$match': { 'status_invoice': '%s' } },{ '$lookup': {'from': 'settings', 'localField': 'item_kind', 'foreignField': 'kind_item', 'as': 'rate_invoice' }} ]"
+                g.pipeline_filter_all = "[ { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':{ '$switch':{ 'branches':[ { 'case':{ '$and':[ { '$gt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'0' }, { 'case':{ '$and':[ { '$eq':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'1' }, { 'case':{ '$and':[ { '$lt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'2' } ], 'default':'-1' } } } }, { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } },{ '$lookup': {'from': 'settings', 'localField': 'item_kind', 'foreignField': 'kind_item', 'as': 'rate_invoice' }} ]"
 
         except Exception as e:
             print(str(e))
@@ -210,6 +210,8 @@ class User:
             for i in invoices:
                 i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
                 i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
+                i['from_date'] = dt.datetime.strptime(i['from_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
+                i['to_date'] = dt.datetime.strptime(i['to_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
 
             pipeline_collect = [
                 {
@@ -697,6 +699,8 @@ class Invoice:
             for i in invoices:
                 i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
                 i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
+                i['from_date'] = dt.datetime.strptime(i['from_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
+                i['to_date'] = dt.datetime.strptime(i['to_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
             # print(invoices)
         except Exception as e:
             print(str(e))
@@ -715,6 +719,8 @@ class Invoice:
             for i in invoices:
                 i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
                 i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
+                i['from_date'] = dt.datetime.strptime(i['from_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
+                i['to_date'] = dt.datetime.strptime(i['to_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
         except Exception as e:
             print(str(e))
         return render_template('invoice/list.html', invoices=invoices, count_invoice=len(invoices))
@@ -731,6 +737,8 @@ class Invoice:
             for i in invoices:
                 i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
                 i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
+                i['from_date'] = dt.datetime.strptime(i['from_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
+                i['to_date'] = dt.datetime.strptime(i['to_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
         except Exception as e:
             print(str(e))
         return render_template('invoice/list.html', invoices=invoices, count_invoice=len(invoices))
@@ -740,6 +748,8 @@ class Invoice:
             invoices = db.invoice.find_one( {"$or":[{"status":1},{"status":2}],"invoice_id":id} )
             invoices['price_pawn'] = "{:,.0f}".format(float(invoices['price_pawn']))
             invoices['price_rate'] = "{:,.0f}".format(float(invoices['price_rate']))
+            invoices['from_date'] = dt.datetime.strptime(invoices['from_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
+            invoices['to_date'] = dt.datetime.strptime(invoices['to_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
         except Exception as e:
             print(str(e))
         return jsonify(invoices), 200
@@ -754,7 +764,7 @@ class Settings:
                 rate = int(setting["rate"]) + int(setting["service_charge"]) + int(setting["storage_charge"])
         except Exception as e:
             print(str(e))
-        return jsonify(rate), 200
+        return jsonify(setting), 200
 
     def set_rate(self, kind_item):
         setting = {}
@@ -971,6 +981,7 @@ class Funds:
             for i in lst_collect:
                 price_collect += int(i["price"])
                 i["price"] = "{:,.0f}".format(float(i["price"]))
+                i["date_created"] = dt.datetime.strptime(str(i["date_created"]), "%Y-%m-%d %H:%M:%S.%f").strftime("%d-%m-%Y %H:%M")
 
             pipeline_spent = [
                 {
@@ -1022,6 +1033,7 @@ class Funds:
             for i in lst_spent:
                 price_spent += int(i["price"])
                 i["price"] = "{:,.0f}".format(float(i["price"]))
+                i["date_created"] = dt.datetime.strptime(str(i["date_created"]), "%Y-%m-%d %H:%M:%S.%f").strftime("%d-%m-%Y %H:%M")
             print(price_collect)
             print(price_spent)
         except Exception as e:

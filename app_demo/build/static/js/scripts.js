@@ -187,6 +187,7 @@ $("#pawn_item_kind").on("change",function(e){
         $("#pawn_to_date").val("");
         $("#pawn_price_rate").val("");
         $("#pawn_week").val("");
+        $("#detail_rate").val("");
 
         var kind_item = $.parseJSON(this.value);
 
@@ -198,7 +199,8 @@ $("#pawn_item_kind").on("change",function(e){
             success: function(resp){
                 //console.log(kind_item)
                 //console.log(resp)
-                $("#pawn_rate").val(resp/4);
+                $("#pawn_rate").val((parseInt(resp.rate) + parseInt(resp.service_charge) + parseInt(resp.storage_charge))/4);
+                $("#detail_rate").val("-Lãi suất :" + resp.rate + "%" + " -Phí dịch vụ : " + resp.service_charge + "%" + " -Phí bảo quản : " + resp.storage_charge + "%");
                 $("#pawn_kind_item").val(kind_item);
 
             },
