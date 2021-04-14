@@ -9,7 +9,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+              <li class="breadcrumb-item"><a href="#">Bảng điều khiển</a></li>
               <li class="breadcrumb-item active">Báo cáo thu chi</li>
             </ol>
           </div>
@@ -24,6 +24,8 @@
           <div class="card">
             <div class="card-header">
               <h3 class="card-title">Tổng thu : {{ price_collect }}</h3>
+	            <h3 class="card-title">| Hợp đồng : {{ price_collect_invoice }}</h3>
+	            <h3 class="card-title">| Nguồn khác : {{ price_collect_other }}</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -32,6 +34,7 @@
                 <tr>
                   <th>Nguồn thu</th>
 	                <th>Mã HĐ</th>
+	                <th>Tài sản</th>
                   <th>Người nhập</th>
 	                <th>Ngày nhập</th>
                   <th>Phí</th>
@@ -43,6 +46,7 @@
                 <tr>
                   <td>{{ fund['type'] }}</td>
                   <td>{{ fund['invoice_id'] }}</td>
+	                <td>{{ fund['item_name'] }}</td>
                   <td>{{ fund['user_created'] }}</td>
 	                <td>{{ fund['date_created'] }}</td>
                   <td>{{ fund['price'] }}</td>
@@ -51,16 +55,16 @@
                 {%  endfor %}
 
                 </tbody>
-                <tfoot>
-                <tr>
-                  <th>Nguồn thu</th>
-	                <th>Mã HĐ</th>
-                  <th>Người nhập</th>
-	                <th>Ngày nhập</th>
-                  <th>Phí</th>
-                  <th>Ghi chú</th>
-                </tr>
-                </tfoot>
+<!--                <tfoot>-->
+<!--                <tr>-->
+<!--                  <th>Nguồn thu</th>-->
+<!--	                <th>Mã HĐ</th>-->
+<!--                  <th>Người nhập</th>-->
+<!--	                <th>Ngày nhập</th>-->
+<!--                  <th>Phí</th>-->
+<!--                  <th>Ghi chú</th>-->
+<!--                </tr>-->
+<!--                </tfoot>-->
               </table>
             </div>
             <!-- /.card-body -->
@@ -70,6 +74,8 @@
 	        <div class="card">
             <div class="card-header">
               <h3 class="card-title">Tổng chi : {{ price_spent }}</h3>
+	            <h3 class="card-title">| Hợp đồng : {{ price_spent_invoice }}</h3>
+	            <h3 class="card-title">| Nguồn khác : {{ price_spent_other }}</h3>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -78,6 +84,7 @@
                 <tr>
                   <th>Nguồn chi</th>
 	                <th>Mã HĐ</th>
+	                <th>Tài sản</th>
                   <th>Người nhập</th>
 	                <th>Ngày chi</th>
                   <th>Phí</th>
@@ -89,6 +96,7 @@
                 <tr>
                   <td>{{ fund['type'] }}</td>
                   <td>{{ fund['invoice_id'] }}</td>
+	                 <td>{{ fund['item_name'] }}</td>
                   <td>{{ fund['user_created'] }}</td>
 	                <td>{{ fund['date_created'] }}</td>
                   <td>{{ fund['price'] }}</td>
@@ -97,16 +105,16 @@
                 {%  endfor %}
 
                 </tbody>
-                <tfoot>
-                <tr>
-                  <th>Nguồn chi</th>
-	                <th>Mã HĐ</th>
-                  <th>Người nhập</th>
-	                <th>Ngày chi</th>
-                  <th>Phí</th>
-                  <th>Ghi chú</th>
-                </tr>
-                </tfoot>
+<!--                <tfoot>-->
+<!--                <tr>-->
+<!--                  <th>Nguồn chi</th>-->
+<!--	                <th>Mã HĐ</th>-->
+<!--                  <th>Người nhập</th>-->
+<!--	                <th>Ngày chi</th>-->
+<!--                  <th>Phí</th>-->
+<!--                  <th>Ghi chú</th>-->
+<!--                </tr>-->
+<!--                </tfoot>-->
               </table>
             </div>
             <!-- /.card-body -->

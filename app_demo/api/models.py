@@ -50,7 +50,7 @@ class User:
                 # print(g.settings)
                 today = datetime.combine(date.today(), datetime.min.time())
                 g.logs = list(db.logs.find({"date_created": {"$gte": today}}))
-                print(g.logs)
+                # print(g.logs)
                 # setting filter
                 g.pipeline_filter_status = "[ { '$project': { '_id': 0, 'invoice_id': 1, 'item_kind': 1, 'item_name': 1, 'customer': 1, 'price_pawn': 1, 'rate': 1, 'price_rate': 1, 'from_date': 1, 'to_date': 1, 'user_created': 1, 'date_created': 1, 'status': 1, 'status_invoice': { '$switch': { 'branches': [ { 'case': { '$and': [ { '$gt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '0' }, { 'case': { '$and': [ { '$eq': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '1' }, { 'case': { '$and': [ { '$lt': [ '$to_date', '%s' ] }, { '$in': [ '$status', [ 1, 2 ] ] } ] }, 'then': '2' } ], 'default': '-1' } } } },{ '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1,'status_invoice':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } }, { '$match': { 'status_invoice': '%s' } },{ '$lookup': {'from': 'settings', 'localField': 'item_kind', 'foreignField': 'kind_item', 'as': 'rate_invoice' }} ]"
                 g.pipeline_filter_all = "[ { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice':{ '$switch':{ 'branches':[ { 'case':{ '$and':[ { '$gt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'0' }, { 'case':{ '$and':[ { '$eq':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'1' }, { 'case':{ '$and':[ { '$lt':[ '$to_date', '%s' ] }, { '$in':[ '$status', [ 1, 2 ] ] } ] }, 'then':'2' } ], 'default':'-1' } } } }, { '$project':{ '_id':0, 'invoice_id':1, 'item_kind':1, 'item_name':1, 'customer':1, 'price_pawn':1, 'rate':1, 'price_rate':1, 'from_date':1, 'to_date':1, 'user_created':1, 'date_created':1, 'status':1, 'status_invoice_msg':{ '$switch':{ 'branches':[ { 'case':{ '$eq':[ '$status_invoice', '0' ] }, 'then':'Bình thường' }, { 'case':{ '$eq':[ '$status_invoice', '1' ] }, 'then':'Đến hạn' }, { 'case':{ '$eq':[ '$status_invoice', '2' ] }, 'then':'Quá hạn' } ], 'default':'Đã tất toán' } } } },{ '$lookup': {'from': 'settings', 'localField': 'item_kind', 'foreignField': 'kind_item', 'as': 'rate_invoice' }} ]"
@@ -344,7 +344,7 @@ class User:
             invoice["price_pawn"] = "{:,.0f}".format(invoice["price_pawn"])
 
             rate = db.settings.find_one({"kind_item":invoice["item_kind"]})
-            print(invoice)
+            # print(invoice)
             if invoice["item_kind"] in ("1", "2", "4", "5", "7", "8", "9"):
                 return render_template('page/hopdong.html', invoice=invoice, rate=rate)
             else:
@@ -457,7 +457,7 @@ class Invoice:
                     error = 'Chưa nhập số tiền vay'
                     return jsonify({"error": error}), 400
                 if int(price.replace(',', '')) % 1000 != 0:
-                    error = 'Số tiền vay phải chia hết cho 10.000'
+                    error = 'Số tiền vay phải chia hết cho 1.000'
                     return jsonify({"error": error}), 400
                 if from_date is None or len(from_date) == 0:
                     error = 'Chưa nhập ngày vay'
@@ -474,30 +474,30 @@ class Invoice:
                     error = 'Ngày đến hạn không được nhỏ hơn hoặc bằng ngày vay'
                     return jsonify({"error": error}), 400
 
-                # check customer . false : create info customer / true : get info customer
-                customer = db.customers.find_one({"cmnd": cmnd})
-                if customer:
-                    pass
-                else:
+                # # check customer . false : create info customer / true : get info customer
+                # customer = db.customers.find_one({"cmnd": cmnd})
+                # if customer:
+                #     pass
+                # else:
 
-                    # customer
-                    customer = {
-                        "_id": uuid.uuid4().hex,
-                        "id": db.customers.find().count() + 1,
-                        "name": name,
-                        "email": request.form.get("pawn_email"),
-                        "phone": request.form.get("pawn_phone"),
-                        "cmnd": cmnd,
-                        "item_name": item_name,
-                        # "cmnd_1": request.form.get("cmnd_1_customer"),
-                        # "cmnd_2": request.form.get("cmnd_2_customer"),
-                        "address": request.form.get("pawn_address"),
-                        "user_created": g.user["user_name"],
-                        "date_created": dt.datetime.now()
-                    }
-                    db.customers.insert_one(customer)
+                # customer
+                customer = {
+                    "_id": uuid.uuid4().hex,
+                    "id": db.customers.find().count() + 1,
+                    "name": name,
+                    "email": request.form.get("pawn_email"),
+                    "phone": request.form.get("pawn_phone"),
+                    "cmnd": cmnd,
+                    "item_name": item_name,
+                    # "cmnd_1": request.form.get("cmnd_1_customer"),
+                    # "cmnd_2": request.form.get("cmnd_2_customer"),
+                    "address": request.form.get("pawn_address"),
+                    "user_created": g.user["user_name"],
+                    "date_created": dt.datetime.now()
+                }
+                db.customers.insert_one(customer)
 
-                    Logs().insert_log(2, customer)
+                Logs().insert_log(2, customer)
 
                 invoice_pawn = {
                     "_id": uuid.uuid4().hex,
@@ -602,7 +602,7 @@ class Invoice:
                         "collect": {
                             "_id": uuid.uuid4().hex,
                             "price": str(price_collect),
-                            "source": {"invoice_id":pay_id},
+                            "source": db.invoice.find_one({"invoice_id": pay_id},{"_id": 0}),
                             "user_created": g.user["user_name"],
                             "date_created": dt.datetime.now(),
                             "note": request.form.get("pay_note"),
@@ -665,7 +665,7 @@ class Invoice:
                         "collect": {
                             "_id": uuid.uuid4().hex,
                             "price": str(redeem_price + redeem_price_rate),
-                            "source": {"invoice_id": redeem_id},
+                            "source": db.invoice.find_one({"invoice_id": redeem_id},{"_id": 0}),
                             "user_created": g.user["user_name"],
                             "date_created": dt.datetime.now(),
                             "note": request.form.get("redeem_note"),
@@ -921,8 +921,12 @@ class Funds:
     def filter(self):
         lst_collect = []
         price_collect = 0
+        price_collect_invoice = 0
+        price_collect_other = 0
         lst_spent = []
         price_spent = 0
+        price_spent_invoice = 0
+        price_spent_other = 0
         try:
             pipeline_collect = [
                             {
@@ -939,6 +943,7 @@ class Funds:
                                     'collect': 1,
                                     'status': 1,
                                     'invoice_id': '$collect.source.invoice_id',
+                                    'item_name': '$collect.source.item_name',
                                     'note': '$collect.note',
                                     'date_created': '$collect.date_created',
                                     'user_created': '$collect.user_created',
@@ -980,6 +985,10 @@ class Funds:
             lst_collect = list(db.funds.aggregate(pipeline_collect))
             for i in lst_collect:
                 price_collect += int(i["price"])
+                if i["type"] == "Khác":
+                    price_collect_other += int(i["price"])
+                else:
+                    price_collect_invoice += int(i["price"])
                 i["price"] = "{:,.0f}".format(float(i["price"]))
                 i["date_created"] = dt.datetime.strptime(str(i["date_created"]), "%Y-%m-%d %H:%M:%S.%f").strftime("%d-%m-%Y %H:%M")
 
@@ -998,6 +1007,7 @@ class Funds:
                         'spent': 1,
                         'status': 1,
                         'invoice_id': '$spent.source.invoice_id',
+                        'item_name': '$spent.source.item_name',
                         'note': '$spent.note',
                         'date_created': '$spent.date_created',
                         'user_created': '$spent.user_created',
@@ -1032,15 +1042,24 @@ class Funds:
             lst_spent = list(db.funds.aggregate(pipeline_spent))
             for i in lst_spent:
                 price_spent += int(i["price"])
+                if i["type"] == "Khác":
+                    price_spent_other += int(i["price"])
+                else:
+                    price_spent_invoice += int(i["price"])
                 i["price"] = "{:,.0f}".format(float(i["price"]))
                 i["date_created"] = dt.datetime.strptime(str(i["date_created"]), "%Y-%m-%d %H:%M:%S.%f").strftime("%d-%m-%Y %H:%M")
-            print(price_collect)
-            print(price_spent)
+            # print(price_collect)
+            # print(price_spent)
         except Exception as e:
             print(str(e))
-        return render_template('funds/list.html', lst_collect=lst_collect, price_collect = "${:,.0f}".format(float(price_collect)), lst_spent=lst_spent, price_spent = "${:,.0f}".format(float(price_spent)))
-
-
+        return render_template('funds/list.html', lst_collect=lst_collect,
+                                                    price_collect = "${:,.0f}".format(float(price_collect)),
+                                                    price_collect_invoice="${:,.0f}".format(float(price_collect_invoice)),
+                                                    price_collect_other="${:,.0f}".format(float(price_collect_other)),
+                                                    lst_spent=lst_spent,
+                                                    price_spent = "${:,.0f}".format(float(price_spent)),
+                                                    price_spent_invoice = "${:,.0f}".format(float(price_spent_invoice)),
+                                                    price_spent_other = "${:,.0f}".format(float(price_spent_other)))
 
 
 class Logs:
