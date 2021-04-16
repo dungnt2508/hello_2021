@@ -705,3 +705,20 @@ $( document ).ready(function() {
     };
 });
 
+$("#redeem_week_real").on("input",function(e){
+        console.log("redeem_week_real",e);
+        var redeem_week = $("#redeem_week").val();
+        var redeem_price_rate = $("#redeem_price_rate").val().replaceAll(',', '');
+        var redeem_week_real = $(this).val();
+        var redeem_price_rate_real = (redeem_price_rate/redeem_week) * redeem_week_real;
+
+        if (redeem_week_real == 0 || redeem_week_real.length == 0){
+            $("#redeem_price_rate_real").val(redeem_price_rate);
+        }
+        else {
+            $("#redeem_price_rate_real").val(redeem_price_rate_real);
+        }
+
+    });
+
+

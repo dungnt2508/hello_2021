@@ -569,8 +569,7 @@ class Invoice:
                 pay_from_date = request.form.get("pay_to_date")
                 pay_from_date_obj = datetime.strptime(pay_from_date, '%d-%m-%Y')    # ngày bắt đầu gia hạn
                 pay_to_date = (pay_from_date_obj + timedelta(days=int(pay_week_)*7))  # đến ngày
-                pay_to_date = datetime.strftime(pay_to_date,'%d-%m-%Y')
-                print('to_date'+pay_to_date)
+                # pay_to_date = datetime.strftime(pay_to_date,'%d-%m-%Y')
 
                 # tính lại hợp đồng
                 # tiền vay = tiền đã vay - tiền trả trước (nếu có)
@@ -585,7 +584,7 @@ class Invoice:
                 if db.invoice.update_one({"invoice_id":pay_id},
                                                 {
                                                     "$set":{"week":pay_week_,
-                                                            "from_date": datetime.strftime(pay_from_date,'%Y-%m-%d'),
+                                                            "from_date": datetime.strftime(pay_from_date_obj,'%Y-%m-%d'),
                                                             "to_date": datetime.strftime(pay_to_date,'%Y-%m-%d'),
                                                             "price_pawn": price_pawn,
                                                             "price_rate": price_rate,
@@ -653,6 +652,10 @@ class Invoice:
                 redeem_price = int(request.form.get("redeem_price").replace(',', ''))  # tiền gốc / số tiền vay
 
                 redeem_price_rate = int(request.form.get("redeem_price_rate").replace(',', '')) # tiền lãi
+                redeem_price_rate_real = request.form.get("redeem_price_rate_real").replace(',', '')  # tiền lãi thực tế
+                # print(redeem_price_rate_real)
+                if redeem_price_rate_real != '' and len(redeem_price_rate_real) > 0:
+                    redeem_price_rate = int(redeem_price_rate_real) # hợp đồng tất toán sớm
 
                 # update hợp đồng + insert khoản thu
                 funds = 0
@@ -749,7 +752,7 @@ class Invoice:
             invoices = db.invoice.find_one( {"$or":[{"status":1},{"status":2}],"invoice_id":id} )
             invoices['price_pawn'] = "{:,.0f}".format(float(invoices['price_pawn']))
             invoices['price_rate'] = "{:,.0f}".format(float(invoices['price_rate']))
-            print(invoices['from_date'])
+            # print(invoices['from_date'])
             invoices['from_date'] = dt.datetime.strptime(invoices['from_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
             invoices['to_date'] = dt.datetime.strptime(invoices['to_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
         except Exception as e:
