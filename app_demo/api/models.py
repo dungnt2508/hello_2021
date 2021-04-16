@@ -567,9 +567,10 @@ class Invoice:
                 if pay_price_ is None or len(pay_price_) == 0 :
                     pay_price_ = 0
                 pay_from_date = request.form.get("pay_to_date")
-                pay_from_date_obj = datetime.strptime(pay_from_date, '%Y-%m-%d')    # ngày bắt đầu gia hạn
+                pay_from_date_obj = datetime.strptime(pay_from_date, '%d-%m-%Y')    # ngày bắt đầu gia hạn
                 pay_to_date = (pay_from_date_obj + timedelta(days=int(pay_week_)*7))  # đến ngày
-                pay_to_date = datetime.strftime(pay_to_date,'%Y-%m-%d')
+                pay_to_date = datetime.strftime(pay_to_date,'%d-%m-%Y')
+                print('to_date'+pay_to_date)
 
                 # tính lại hợp đồng
                 # tiền vay = tiền đã vay - tiền trả trước (nếu có)
@@ -584,8 +585,8 @@ class Invoice:
                 if db.invoice.update_one({"invoice_id":pay_id},
                                                 {
                                                     "$set":{"week":pay_week_,
-                                                            "from_date": pay_from_date,
-                                                            "to_date": pay_to_date,
+                                                            "from_date": datetime.strftime(pay_from_date,'%Y-%m-%d'),
+                                                            "to_date": datetime.strftime(pay_to_date,'%Y-%m-%d'),
                                                             "price_pawn": price_pawn,
                                                             "price_rate": price_rate,
                                                             "user_modify": g.user["user_name"],
@@ -748,6 +749,7 @@ class Invoice:
             invoices = db.invoice.find_one( {"$or":[{"status":1},{"status":2}],"invoice_id":id} )
             invoices['price_pawn'] = "{:,.0f}".format(float(invoices['price_pawn']))
             invoices['price_rate'] = "{:,.0f}".format(float(invoices['price_rate']))
+            print(invoices['from_date'])
             invoices['from_date'] = dt.datetime.strptime(invoices['from_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
             invoices['to_date'] = dt.datetime.strptime(invoices['to_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
         except Exception as e:

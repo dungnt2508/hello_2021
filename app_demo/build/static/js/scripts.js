@@ -393,6 +393,7 @@ $("#pay_id").on("input",function(e){
                 type: "GET",
                 dataType: "json",
                 success: function(resp){
+                    console.log(resp)
                     $("#pay_name").val(resp.customer.name);
                     $("#pay_phone").val(resp.customer.phone);
                     $("#pay_email").val(resp.customer.email);
