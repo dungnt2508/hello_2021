@@ -63,7 +63,7 @@
                   <td>{{ invoice['price_rate'] }}</td>
 	                <td>{{ invoice['status_invoice_msg'] }}</td>
 	                <td >
-	                {%  if invoice['status'] !=0 %}
+	                {%  if invoice['status'] !=0 and invoice['status'] !=10 %}
                         <button type="button" class="btn btn-default" onclick="cms_pay(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-retweet" ></i> Gia hạn</button>
 		                <button type="button" class="btn btn-primary" onclick="cms_redeem(this.id)" id="{{ invoice['invoice_id'] }}"><i class="fas fa-check-circle" ></i> Tất toán</button>
 	                {% endif %}
