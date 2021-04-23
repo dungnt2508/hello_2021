@@ -19,9 +19,10 @@ def get_db():
     if db is None:
         db = g._database = MongoClient(
         APP_DB_URI,
-        #username="root",
-        #password="abcd1234",
+        username="taimh",
+        password="hnvjxTSVSE4HcKKT",
         maxPoolSize=50,     # Set the maximum connection pool size to 50 active connections.
+        retryWrites=True,
         w='majority',   # Set the write timeout limit to 2500 milliseconds.
         wtimeout=2500
         )[APP_DB_NAME]
