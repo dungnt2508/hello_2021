@@ -115,4 +115,43 @@
         })
         </script>
     </body>
+var app = new Vue({
+  el: '#app',
+
+  data: {
+    username: '',
+    players: 0,
+    connectedPlayers: [],
+    status: '',
+    pusher: new Pusher('PUSHER_APP_KEY', {
+      authEndpoint: '/pusher/auth',
+      cluster: 'PUSHER_APP_CLUSTER',
+      encrypted: true
+    }),
+    otherPlayerName: '',
+    mychannel: {},
+    otherPlayerChannel: {},
+    firstPlayer: 0,
+    turn: 0,
+    boxes: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  },
+
+  created () {
+    let url = new URL(window.location.href);
+    let name = url.searchParams.get("username");
+
+    if (name) {
+      this.username = name
+      this.subscribe();
+      this.listeners();
+    } else {
+      this.username = this.generateRandomName();
+      location.assign("/play?username=" + this.username);
+    }
+  },
+
+  methods: {
+    // We will add methods here
+  }
+});
 </html>
