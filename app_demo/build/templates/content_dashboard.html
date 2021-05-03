@@ -103,7 +103,7 @@
               <table id="example2"  style="white-space:nowrap" class="table table-bordered table-hover">
                 <thead>
                 <tr>
-<!--                  <th>Mã HĐ</th>-->
+                <!--<th>Mã HĐ</th>-->
                   <th>Tên KH</th>
                   <th>SĐT</th>
                   <th>Tài sản</th>
@@ -121,12 +121,12 @@
                 <tbody>
                 {% for invoice in invoices %}
                 <tr>
-<!--                  <td>{{ invoice['invoice_id'] }}</td>-->
+                  <!--<td>{{ invoice['invoice_id'] }}</td>-->
                   <td>{{ invoice['customer']['name'] }}</td>
                   <td>{{ invoice['customer']['phone'] }}</td>
                   <td>{{ invoice['item_name'] }}</td>
                   <td>{{ invoice['price_pawn'] }}</td>
-	                <td>{{ invoice['from_date'] }}</td>
+	                <td >{{ invoice['from_date'] }}</td>
                   <td>{{ invoice['to_date'] }}</td>
 	                <td>{{ invoice['rate_invoice'][0]['rate'] }}</td>
 	                <td>{{ invoice['rate_invoice'][0]['storage_charge'] }}</td>
