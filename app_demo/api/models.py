@@ -41,7 +41,7 @@ class User:
                 g.total_customer = db.customers.find().count()
                 g.customer = []
                 if g.total_customer != 0:
-                    g.customers = list(db.customers.aggregate([{"$sort": {"_id": 1}}]))[0]
+                    g.customers = list(db.customers.aggregate([{"$sort": {"_id": -1}}]))[0]
 
                 # get quĩ
                 g.treasure = 0
@@ -264,7 +264,7 @@ class User:
                         }
                     }
                 },
-                {'$sort': {'type': 1}}
+                {'$sort': {'date_created': -1}}
             ]
 
             lst_collect = list(db.funds.aggregate(pipeline_collect))
@@ -314,7 +314,7 @@ class User:
                         }
                     }
                 },
-                {'$sort': {'type': 1}}
+                {'$sort': {'date_created': -1}}
             ]
 
             lst_spent = list(db.funds.aggregate(pipeline_spent))
@@ -595,7 +595,7 @@ class Invoice:
                                                             "status": 2
                                                             }}):
                     Logs().insert_log(3, {"invoice_id": pay_id, "status": 2, "price": str(funds + price_collect).replace(',', '')})
-                    treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))
+                    treasure = list(db.funds.aggregate([{"$sort": {"from_date": -1}}, {"$limit": 1}]))
                     if treasure:
                         funds = int(treasure[0]["funds"])
                     funds_collect = {
@@ -923,7 +923,6 @@ class Funds:
             print(str(e))
 
         return render_template('funds/spent.html')
-
     def filter(self):
         lst_collect = []
         price_collect = 0
@@ -985,7 +984,7 @@ class Funds:
                                     }
                                 }
                             },
-                            {'$sort':{'_id':1}}
+                            {'$sort':{'date_created':-1}}
                         ]
 
             lst_collect = list(db.funds.aggregate(pipeline_collect))
@@ -1042,7 +1041,7 @@ class Funds:
                         }
                     }
                 },
-                {'$sort': {'_id': 1}}
+                {'$sort': {'date_created': -1}}
             ]
 
             lst_spent = list(db.funds.aggregate(pipeline_spent))
