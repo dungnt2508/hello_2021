@@ -82,24 +82,38 @@
 
 
 
-
+<!---->
 	<script>
 	  $(function () {
-	    $("#example1").DataTable();
-	    $("#example3").DataTable();
+	    $("#example1").DataTable({
+	    "paging": true,
+	      "lengthChange": false,
+	      "searching": true,
+	      "ordering": true,
+	      "info": true,
+	      "autoWidth": false,
+	    "ordering": false
+	    });
+
+	    $('#example3').DataTable({
+	      "paging": true,
+	      "lengthChange": false,
+	      "searching": true,
+	      "ordering": true,
+	      "info": true,
+	      "autoWidth": false,
+	       "ordering": false
+	    });
 	    $('#example2').DataTable({
 	      "paging": true,
 	      "lengthChange": false,
 	      "searching": true,
 	      "ordering": true,
 	      "info": true,
-	      "autoWidth": false
+	      "autoWidth": false,
+	      "ordering": false
 	    });
-
-
 	  });
-
-
 	</script>
 
 </body>
