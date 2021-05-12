@@ -595,7 +595,7 @@ class Invoice:
                                                             "status": 2
                                                             }}):
                     Logs().insert_log(3, {"invoice_id": pay_id, "status": 2, "price": str(funds + price_collect).replace(',', '')})
-                    treasure = list(db.funds.aggregate([{"$sort": {"from_date": -1}}, {"$limit": 1}]))
+                    treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))
                     if treasure:
                         funds = int(treasure[0]["funds"])
                     funds_collect = {
