@@ -205,14 +205,17 @@ class User:
             count_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '1')))))
             count_over_expired = len(list(db.invoice.aggregate(eval(g.pipeline_filter_status % (today, today, today, '2')))))
             invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_all % (today, today, today))))
-            # print(invoices)
 
+            invoices = [i for i in invoices if not (i['status'] == 0) and not (i['status'] == 10)]  # dashboard : ko lấy hợp đồng đã tất toán
+
+            # print(invoices)
             # invoices['price_pawn'] = ["{:,}".format(float(invoice['price_pawn'])) for invoice in invoices]
             for i in invoices:
                 i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
                 i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
                 i['from_date'] = dt.datetime.strptime(i['from_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
                 i['to_date'] = dt.datetime.strptime(i['to_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
+
 
             pipeline_collect = [
                 {
@@ -698,18 +701,24 @@ class Invoice:
 
     def filter(self):
         invoices = []
+        total = 0
+        total_rate = 0
         try:
             today = str(date.today())
             invoices = list(db.invoice.aggregate(eval(g.pipeline_filter_all % (today, today, today))))
             for i in invoices:
+                total += i['price_pawn']
+                total_rate += i['price_rate']
                 i['price_pawn'] = "{:,.0f}".format(float(i['price_pawn']))
                 i['price_rate'] = "{:,.0f}".format(float(i['price_rate']))
                 i['from_date'] = dt.datetime.strptime(i['from_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
                 i['to_date'] = dt.datetime.strptime(i['to_date'], "%Y-%m-%d").strftime("%d-%m-%Y")
+            total = "{:,.0f}".format(float(total))
+            total_rate= "{:,.0f}".format(float(total_rate))
             # print(invoices)
         except Exception as e:
             print(str(e))
-        return render_template('invoice/list.html', invoices=invoices)
+        return render_template('invoice/list.html', invoices=invoices, total=total, total_rate=total_rate)
 
     def filter_expired(self):
         """
