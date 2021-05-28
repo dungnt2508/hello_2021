@@ -663,6 +663,7 @@ class Invoice:
 
                 # update hợp đồng + insert khoản thu
                 funds = 0
+                print(str(funds + redeem_price + redeem_price_rate))
                 if db.invoice.update_one({"invoice_id": redeem_id},{"$set": {"status": 0}}):
                     Logs().insert_log(3, {"invoice_id": redeem_id, "status": 0, "price": str(redeem_price + redeem_price_rate).replace(',', '')})
                     treasure = list(db.funds.aggregate([{"$sort": {"_id": -1}}, {"$limit": 1}]))

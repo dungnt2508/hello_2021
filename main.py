@@ -1,4 +1,5 @@
 from playtovictory import create_app
+# from app_demo import create_app
 
 import os
 import configparser
@@ -12,5 +13,4 @@ if __name__ == '__main__':
     app.config['APP_DB_URI'] = config['PLAYTOVICTORY']['APP_DB_URI']
     app.config['APP_NS'] = config['PLAYTOVICTORY']['APP_NS']
     app.config['SECRET_KEY'] = config['PLAYTOVICTORY']['SECRET_KEY']
-
     app.run(host="localhost",port=5000)

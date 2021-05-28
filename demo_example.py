@@ -3,22 +3,22 @@ from datetime import datetime
 from datetime import date
 from datetime import timedelta
 
-client = MongoClient("mongodb://127.0.0.1:27017")
-db = client.blog
-
-# Reset.
-db.posts.delete_many({})
-
-# Get today.
-today = datetime.today()
-today_2 = date.today()
-print(today_2)
-print(type(today_2))
-
-dt = datetime.combine(date.today(), datetime.min.time())
-
-print(dt)
-print(type(dt))
+# client = MongoClient("mongodb://127.0.0.1:27017")
+# db = client.blog
+#
+# # Reset.
+# db.posts.delete_many({})
+#
+# # Get today.
+# today = datetime.today()
+# today_2 = date.today()
+# print(today_2)
+# print(type(today_2))
+#
+# dt = datetime.combine(date.today(), datetime.min.time())
+#
+# print(dt)
+# print(type(dt))
 #
 # # Insert some blog posts.
 # db.posts.insert_many([
@@ -39,3 +39,17 @@ print(type(dt))
 # for doc in cursor:
 #     print(doc)
 #
+
+test_list = [{"id": 1, "data": "HappY"},
+             {"id": 2, "data": "BirthDaY"},
+             {"id": 3, "data": "Rash"}]
+
+# printing original list
+print("The original list is : " + str(test_list))
+
+# using list comprehension
+# to delete dictionary in list
+res = [i for i in test_list if not (i['id'] == 2) and not (i['id'] == 3)]
+
+# printing result
+print("List after deletion of dictionary : " + str(res))

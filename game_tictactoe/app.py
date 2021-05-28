@@ -5,8 +5,8 @@ app = Flask(__name__)
 
 pusher = pusher_client = pusher.Pusher(
   app_id='1193552',
-  key='797cf18b328b54dede0e',
-  secret='eb6dcea8fba67a8e13d9',
+  key='e4a5aea2576d02af022e',
+  secret='3415367c1d5e63dd723f',
   cluster='ap1',
   ssl=True
 )
