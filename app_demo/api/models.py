@@ -1000,6 +1000,7 @@ class Funds:
             for i in lst_collect:
                 price_collect += int(i["price"])
                 if i["type"] == "Khác":
+                    i["type"] = i["collect"]["source"]["source"]
                     price_collect_other += int(i["price"])
                 else:
                     price_collect_invoice += int(i["price"])
@@ -1057,6 +1058,7 @@ class Funds:
             for i in lst_spent:
                 price_spent += int(i["price"])
                 if i["type"] == "Khác":
+                    i["type"] = i["spent"]["source"]["source"]
                     price_spent_other += int(i["price"])
                 else:
                     price_spent_invoice += int(i["price"])
